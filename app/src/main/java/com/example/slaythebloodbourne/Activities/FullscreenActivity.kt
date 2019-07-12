@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.example.slaythebloodbourne.R
 import androidx.viewpager.widget.ViewPager
 import com.example.slaythebloodbourne.Modules.ViewPagerAdapter
@@ -13,37 +14,50 @@ import kotlinx.android.synthetic.main.activity_fullscreen.*
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-class FullscreenActivity : AppCompatActivity() {
+class FullscreenActivity : FragmentActivity() {
 
-    lateinit var viewPager: ViewPager
-    lateinit var viewPagerAdapter: ViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         //Hiding UI elements
         setContentView(R.layout.activity_fullscreen)
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN)
-        supportActionBar?.hide()
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        //supportActionBar?.hide()
 
-        viewPagerAdapter = ViewPagerAdapter(supportFragmentManager)
-        viewPager = fragmentContainer
+
+        if (savedInstanceState != null) {
+            return
+        }
+
         val startMenu = MainMenuFragment()
-        viewPagerAdapter.addItem(startMenu)
-        viewPager.adapter = viewPagerAdapter
+
+        supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, startMenu).commit()
+
+
     }
 
-    fun changeFragment(position: Int,smooth: Boolean = true){
-        viewPager.setCurrentItem(position, smooth)
+    fun replaceCurrentFragmentNoSave(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer, fragment)
+            .commit()
     }
 
-    fun addFragment(fragment: Fragment){
-        viewPagerAdapter.addItem(fragment)
-        viewPagerAdapter.notifyDataSetChanged()
+    fun replaceCurrentFragmentSave(fragment: Fragment){
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer,fragment,"PATHWAY")
+            .addToBackStack("PATHWAY")
+            .commit()
     }
 
-    fun removeFragment(position: Int){
-        viewPagerAdapter.removeItem(position)
-        viewPagerAdapter.notifyDataSetChanged()
+    fun goBackOneFragment(){
+        supportFragmentManager.popBackStackImmediate()
+    }
+
+    fun createNewGame(){
+        val startMenu = MainMenuFragment()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragmentContainer,startMenu)
+            .commit()
     }
 }

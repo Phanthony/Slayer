@@ -35,16 +35,22 @@ class  BattleFragment(private val player: Character): Fragment() {
 
     lateinit var enemy : Enemy
 
+
     private val adapter = RecyclerViewAdapter(arrayListOf(), arrayListOf())
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        enemy = Enemy_Zombie()
+        when((0..1).random()){
+            1 -> {enemy.enemyCurrentHealth = 10}
+            0 -> {enemy.enemyCurrentHealth = 15}
+        }
+        turnEngine = TurnEngine(player,enemy)
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.battle_fragment_layout,container,false)
-
-        enemy = Enemy_Zombie()
-        enemy.enemyCurrentHealth = 10
-
-        turnEngine = TurnEngine(player,enemy)
 
         //Get UI pieces that update
         enemyAttackText = view.findViewById(R.id.enemyAttackNumber)
@@ -153,14 +159,11 @@ class  BattleFragment(private val player: Character): Fragment() {
 
     private fun leaveBattleFragment(){
         val main = (activity as FullscreenActivity)
-        main.changeFragment(1)
-        main.removeFragment(2)
+        main.goBackOneFragment()
     }
 
     private fun leaveGame(){
         val main = (activity as FullscreenActivity)
-        main.changeFragment(0)
-        main.removeFragment(2)
-        main.removeFragment(1)
+        main.createNewGame()
     }
 }

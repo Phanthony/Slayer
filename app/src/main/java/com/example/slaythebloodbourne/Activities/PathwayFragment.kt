@@ -59,15 +59,10 @@ class PathwayFragment : Fragment() {
             2 -> { }
             else -> {
                 button.setOnClickListener {
-
+                    levelCount++
                     val newBattle = BattleFragment(player)
                     val mainActivity = activity as FullscreenActivity
-                    mainActivity.addFragment(newBattle)
-                    mainActivity.changeFragment(2)
-
-                    setRooms()
-                    levelCount++
-                    currentFloorTextView.text = "Floor $levelCount"
+                    mainActivity.replaceCurrentFragmentSave(newBattle)
                 }
             }
         }
@@ -82,6 +77,7 @@ class PathwayFragment : Fragment() {
         val buttonPath3 = view.findViewById<AppCompatImageButton>(R.id.buttonPathThree)
         currentFloorTextView = view.findViewById(R.id.textFloorCount)
         pathwayList = arrayListOf(buttonPath1, buttonPath2, buttonPath3)
+        currentFloorTextView.text = "Floor $levelCount"
 
         startGame()
 

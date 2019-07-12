@@ -22,18 +22,18 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
             enemy.enemyAttack = enemyMove.attack
             playerDrawFromHand()
         }
+        player.playerCurrentEnergy = player.energy
         return enemyMove
     }
 
     fun playerDrawFromHand() {
         if (battleState == BATTLE_ONGOING) {
-            for (card in 1..player.maxCards) {
+            while(player.playerHand.size < player.maxCards) {
                 if (player.playerDeck.isEmpty()) {
                     resetPlayerDeck(player.playerDiscard, player.playerDeck)
                 }
                 player.playerHand.add(player.playerDeck.removeAt(0))
             }
-            println(player.playerHand)
         }
     }
 
@@ -91,7 +91,6 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
         enemy.enemyBlock = 0
         player.playerDiscard.addAll(player.playerHand)
         player.playerHand.clear()
-        player.playerCurrentEnergy = player.energy
         enemyMove = startTurn()
     }
 }

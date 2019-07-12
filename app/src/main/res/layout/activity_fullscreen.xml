@@ -1,24 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/fragmentContainer"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
              android:background="@drawable/bg_dungeon"
              tools:context=".Activities.FullscreenActivity">
-
-    <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/backgroundImage"
-            android:src="@drawable/bg_dungeon"
-            android:scaleType="fitXY"
-    />
-
-    <androidx.viewpager.widget.ViewPager
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/fragmentContainer">
-
-    </androidx.viewpager.widget.ViewPager>
 
 </FrameLayout>

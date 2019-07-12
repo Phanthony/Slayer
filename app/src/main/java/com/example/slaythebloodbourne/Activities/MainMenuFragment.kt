@@ -18,8 +18,7 @@ class MainMenuFragment:Fragment() {
         startButton.setOnClickListener {
             val newGame = PathwayFragment()
             val mainActivity = activity as FullscreenActivity
-            mainActivity.addFragment(newGame)
-            mainActivity.changeFragment(1)
+            mainActivity.replaceCurrentFragmentNoSave(newGame)
         }
 
         return view
