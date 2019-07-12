@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pathWayLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent"
+        android:visibility="visible">
+
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/pathWayButtonGuidelineHorizontal"
+            app:layout_constraintGuide_percent="0.55"
+    />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3"
+            android:id="@+id/pathWayButtonGuidelineLeftMargin"
+    />
+
+
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.7"
+            android:id="@+id/pathWayButtonGuidelineRightMargin"
+    />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/buttonPathOne"
+            app:layout_constraintBottom_toTopOf="@+id/pathWayButtonGuidelineHorizontal"
+            app:layout_constraintRight_toRightOf="@id/pathWayButtonGuidelineLeftMargin"
+            android:scaleType="fitXY"
+            android:background="@android:color/darker_gray"
+
+    />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/buttonPathTwo"
+            app:layout_constraintBottom_toTopOf="@+id/pathWayButtonGuidelineHorizontal"
+            app:layout_constraintLeft_toRightOf="@id/buttonPathOne"
+            app:layout_constraintRight_toLeftOf="@id/buttonPathThree"
+            android:scaleType="fitXY"
+            android:background="@android:color/darker_gray"
+    />
+
+    <androidx.appcompat.widget.AppCompatImageButton
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/buttonPathThree"
+            app:layout_constraintBottom_toTopOf="@+id/pathWayButtonGuidelineHorizontal"
+            app:layout_constraintLeft_toLeftOf="@+id/pathWayButtonGuidelineRightMargin"
+            android:scaleType="fitXY"
+            android:background="@android:color/darker_gray"
+    />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.21"
+            android:id="@+id/floorCountGuideline"
+    />
+
+    <TextView
+            android:id="@+id/textFloorCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40sp"
+            android:text="Floor 1"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toTopOf="@id/floorCountGuideline"
+            app:layout_constraintLeft_toRightOf="@id/pathWayButtonGuidelineLeftMargin"
+            app:layout_constraintRight_toLeftOf="@id/pathWayButtonGuidelineRightMargin"
+
+    />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
