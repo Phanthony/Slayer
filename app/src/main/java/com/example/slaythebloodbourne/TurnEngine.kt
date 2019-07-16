@@ -1,6 +1,6 @@
 package com.example.slaythebloodbourne
 
-import com.example.slaythebloodbourne.Entities.Cards.Card
+import com.example.slaythebloodbourne.Entities.Items.Cards.Card
 import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy
 import com.example.slaythebloodbourne.Entities.Enemies.Move
@@ -14,7 +14,7 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
     var battleState = BATTLE_ONGOING
     var enemyMove = startTurn()
 
-    fun startTurn(): Move {
+    private fun startTurn(): Move {
         enemyEnergyIncrease()
         val enemyMove = enemy.chooseMove()
         if (battleState == BATTLE_ONGOING) {
@@ -28,7 +28,7 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
 
     fun playerDrawFromHand() {
         if (battleState == BATTLE_ONGOING) {
-            while(player.playerHand.size < player.maxCards) {
+            while (player.playerHand.size < player.maxCards) {
                 if (player.playerDeck.isEmpty()) {
                     resetPlayerDeck(player.playerDiscard, player.playerDeck)
                 }
@@ -39,7 +39,6 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
 
     fun endTurn() {
         if (battleState == BATTLE_ONGOING) {
-            player.playerDiscard.addAll(player.playerHand)
             val enemyDamageDone =
                 if (enemy.enemyAttack - player.playerBlock > 0) enemy.enemyAttack - player.playerBlock else 0
             player.takeDamage(enemyDamageDone)
@@ -55,7 +54,6 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
         discardPile.shuffle()
         deckPile.addAll(discardPile)
         discardPile.clear()
-
     }
 
     private fun enemyEnergyIncrease() {
@@ -76,10 +74,19 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
     fun playCard(card: Card) {
         if (battleState == BATTLE_ONGOING) {
             player.playerCurrentEnergy -= card.energyCost
+            if (card.special) card.ability(player, enemy)
             player.playerBlock += card.block
-            val playerDamageDone = if (card.attack - enemy.enemyBlock > 0) card.attack - enemy.enemyBlock else 0
+            val playerDamageDone =
+                when (card.attack) {
+                    0 -> 0
+                    else -> {
+                        if (card.attack + player.playerBonusAttack - enemy.enemyBlock > 0) card.attack + player.playerBonusAttack - enemy.enemyBlock else 0
+                    }
+                }
             enemy.takeDamage(playerDamageDone)
             player.playerDiscard.add(card)
+            val pos = player.playerHand.indexOf(card)
+            player.playerHand.removeAt(pos)
             if (enemy.enemyCurrentHealth <= 0) {
                 battleState = BATTLE_WON
             }
@@ -88,7 +95,6 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
 
     private fun resetTurn() {
         player.playerBlock = 0
-        enemy.enemyBlock = 0
         player.playerDiscard.addAll(player.playerHand)
         player.playerHand.clear()
         enemyMove = startTurn()

@@ -8,49 +8,47 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.slaythebloodbourne.*
-import com.example.slaythebloodbourne.Entities.Cards.Card
+import com.example.slaythebloodbourne.Entities.Items.Cards.Card
 import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy
-import com.example.slaythebloodbourne.Entities.Enemies.Enemy_Zombie
-import com.example.slaythebloodbourne.Modules.RecyclerViewAdapter
+import com.example.slaythebloodbourne.Modules.RecyclerViewCardsAdapter
 
-class  BattleFragment(private val player: Character): Fragment() {
+class BattleFragment(private val player: Character, val floor: Int, val enemy: Enemy) : Fragment() {
 
 
     lateinit var enemyAttackText: TextView
     lateinit var enemyBlockText: TextView
     lateinit var enemyHealthBar: ProgressBar
 
-    lateinit var playerHealthBar : ProgressBar
-    lateinit var playerHealthText : TextView
-    lateinit var playerEnergyText : TextView
+    lateinit var playerHealthBar: ProgressBar
+    lateinit var playerHealthText: TextView
+    lateinit var playerEnergyText: TextView
 
-    lateinit var endTurnButton : Button
+    lateinit var endTurnButton: Button
 
     lateinit var turnEngine: TurnEngine
 
-    lateinit var enemy : Enemy
+    private val adapter = RecyclerViewCardsAdapter(arrayListOf(), arrayListOf())
 
-
-    private val adapter = RecyclerViewAdapter(arrayListOf(), arrayListOf())
+    var goldDropped: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        enemy = Enemy_Zombie()
-        when((0..1).random()){
-            1 -> {enemy.enemyCurrentHealth = 10}
-            0 -> {enemy.enemyCurrentHealth = 15}
-        }
-        turnEngine = TurnEngine(player,enemy)
+        val main = (activity as FullscreenActivity)
+        goldDropped = main.randomGold(floor)
+        turnEngine = TurnEngine(player, enemy)
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        val view = inflater.inflate(R.layout.battle_fragment_layout,container,false)
+        val view = inflater.inflate(R.layout.battle_fragment_layout, container, false)
+
+        view.findViewById<AppCompatImageView>(R.id.enemyImage).setImageResource(enemy.image)
 
         //Get UI pieces that update
         enemyAttackText = view.findViewById(R.id.enemyAttackNumber)
@@ -76,7 +74,7 @@ class  BattleFragment(private val player: Character): Fragment() {
         }
 
         val cardList = view.findViewById<RecyclerView>(R.id.cardRecycleView)
-        cardList.layoutManager = LinearLayoutManager(this.context,RecyclerView.HORIZONTAL,false)
+        cardList.layoutManager = LinearLayoutManager(this.context, RecyclerView.HORIZONTAL, false)
         cardList.adapter = adapter
 
         cardButtonBuilder(player.playerHand)
@@ -85,13 +83,13 @@ class  BattleFragment(private val player: Character): Fragment() {
 
     }
 
-    private fun cardButtonBuilder(arrayList: ArrayList<Card>){
+    private fun cardButtonBuilder(arrayList: ArrayList<Card>) {
         adapter.clearCards()
         val cardList = arrayListOf<Card>()
         val listenerList = arrayListOf<OnClickListener>()
-        for (card in arrayList){
-            val clickListener = OnClickListener{
-                if(useCard(card)){
+        for (card in arrayList) {
+            val clickListener = OnClickListener {
+                if (useCard(card)) {
                     val index = adapter.cardList.indexOf(card)
                     adapter.deleteCard(index)
                 }
@@ -99,14 +97,16 @@ class  BattleFragment(private val player: Character): Fragment() {
             cardList.add(card)
             listenerList.add(clickListener)
         }
-        adapter.addCards(cardList,listenerList)
+        adapter.addCards(cardList, listenerList)
     }
 
-    private fun useCard(card: Card): Boolean{
+    private fun useCard(card: Card): Boolean {
         val playable = turnEngine.checkPlayerEnoughEnergy(card)
-        if(playable){
+        if (playable) {
             turnEngine.playCard(card)
             updateEnemyHealthBar()
+            updatePlayerHealthText()
+            updatePlayerHealthBar()
             updatePlayerEnergyText()
             checkBattleState()
         }
@@ -114,7 +114,7 @@ class  BattleFragment(private val player: Character): Fragment() {
     }
 
 
-    private fun endTurn(){
+    private fun endTurn() {
         turnEngine.endTurn()
         updatePlayerHealthBar()
         updatePlayerHealthText()
@@ -125,8 +125,8 @@ class  BattleFragment(private val player: Character): Fragment() {
         cardButtonBuilder(player.playerHand)
     }
 
-    private fun checkBattleState(){
-        when(turnEngine.battleState){
+    private fun checkBattleState() {
+        when (turnEngine.battleState) {
             BATTLE_LOST -> {
                 leaveGame()
             }
@@ -136,33 +136,36 @@ class  BattleFragment(private val player: Character): Fragment() {
         }
     }
 
-    private fun updatePlayerHealthBar(){
+    private fun updatePlayerHealthBar() {
         playerHealthBar.progress = player.health - player.playerCurrentHealth
     }
 
-    private fun updatePlayerEnergyText(){
+    private fun updatePlayerEnergyText() {
         playerEnergyText.text = "${player.playerCurrentEnergy}"
     }
 
-    private fun updatePlayerHealthText(){
+    private fun updatePlayerHealthText() {
         playerHealthText.text = "${player.playerCurrentHealth}/${player.health}"
     }
 
-    private fun updateEnemyHealthBar(){
+    private fun updateEnemyHealthBar() {
         enemyHealthBar.progress = enemy.health - enemy.enemyCurrentHealth
     }
 
-    private fun updateEnemyMoves(){
+    private fun updateEnemyMoves() {
         enemyBlockText.text = "${enemy.enemyBlock}"
         enemyAttackText.text = "${enemy.enemyAttack}"
     }
 
-    private fun leaveBattleFragment(){
+    private fun leaveBattleFragment() {
         val main = (activity as FullscreenActivity)
-        main.goBackOneFragment()
+        val rewardCard: Card? = main.randomCard(player)
+        val victoryFragment = VictoryFragment(rewardCard, goldDropped, player)
+        main.replaceCurrentFragmentNoSave(victoryFragment)
     }
 
-    private fun leaveGame(){
+
+    private fun leaveGame() {
         val main = (activity as FullscreenActivity)
         main.createNewGame()
     }

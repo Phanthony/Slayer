@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:layout_centerInParent="true"
+>
+
+    <Button
+            android:id="@+id/shopItem"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_margin="8dp"
+            android:background="@android:color/darker_gray"
+    />
+
+    <TextView
+            android:id="@+id/itemGoldCostText"
+            android:layout_margin="20dp"
+            android:textSize="30sp"
+            android:textColor="@android:color/holo_orange_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="100dp"
+            android:layout_gravity="center_vertical|end"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+    />
+
+    <TextView
+            android:id="@+id/itemEnergyCostText"
+            android:layout_margin="20dp"
+            android:textSize="30sp"
+            android:textColor="#0f54fa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="100dp"
+            android:layout_gravity="center_vertical|start"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+    />
+
+
+
+</FrameLayout>

@@ -1,8 +1,8 @@
 package com.example.slaythebloodbourne.Entities
 
-import com.example.slaythebloodbourne.Entities.Cards.Card
-import com.example.slaythebloodbourne.Entities.Cards.Card_Block
-import com.example.slaythebloodbourne.Entities.Cards.Card_Strike
+import com.example.slaythebloodbourne.Entities.Items.Cards.Card
+import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Block
+import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Strike
 
 class Character {
 
@@ -12,20 +12,29 @@ class Character {
     var maxCards = 4
     var energy = 3
 
+    var currentGold = 0
+
     var playerCurrentHealth = health
     var playerHand = arrayListOf<Card>()
     var playerCurrentEnergy = energy
     var playerBlock = 0
+    var playerBonusAttack = 0
+    var playerBonusBlock = 0
 
 
     fun addCardsToDeck(){
-        for(i in 0..5){
-            val baseStrike = Card_Strike()
-            val baseBlock = Card_Block()
+        for(i in 1..4){
+            val baseStrike = Card_Strike(this)
+            val baseBlock = Card_Block(this)
             playerDeck.add(baseBlock)
             playerDeck.add(baseStrike)
         }
         playerDeck.shuffle()
+    }
+
+    fun getHealth(int: Int){
+        playerCurrentHealth += int
+        if (playerCurrentHealth>health) playerCurrentHealth = health
     }
 
     fun takeDamage(damageDone:Int){

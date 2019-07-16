@@ -15,6 +15,7 @@ interface Enemy {
     var enemyCurrentEnergy: Int
     var enemyAttack: Int
 
+    val image: Int
 
     val specialAbility: Boolean
 

@@ -1,27 +1,27 @@
 package com.example.slaythebloodbourne.Modules
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.slaythebloodbourne.Entities.Cards.Card
+import com.example.slaythebloodbourne.Entities.Items.Cards.Card
 import com.example.slaythebloodbourne.R
-import com.example.slaythebloodbourne.TurnEngine
-import kotlinx.android.synthetic.main.recyclerview_layout.view.*
+import kotlinx.android.synthetic.main.recyclerview_cards_layout.view.*
 
 
-class RecyclerViewAdapter(val cardList: ArrayList<Card>,val listenerList: ArrayList<OnClickListener>) : RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>(){
+class RecyclerViewCardsAdapter(val cardList: ArrayList<Card>, val listenerList: ArrayList<OnClickListener>) : RecyclerView.Adapter<RecyclerViewCardsAdapter.ViewHolder>(){
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val cardButton: Button = itemView.cardButton
+        val cardEnergy: TextView = itemView.cardEnergyCost
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val layout = LayoutInflater.from(parent.context).inflate(R.layout.recyclerview_layout,parent,false)
+        val layout = LayoutInflater.from(parent.context).inflate(R.layout.recyclerview_cards_layout,parent,false)
         return ViewHolder(layout)
     }
 
@@ -34,9 +34,10 @@ class RecyclerViewAdapter(val cardList: ArrayList<Card>,val listenerList: ArrayL
         val currentCard = cardList[position]
         holder.cardButton.text = "${currentCard.name}\n\n${currentCard.description}"
         holder.cardButton.setOnClickListener(currentListener)
+        holder.cardEnergy.text = "${currentCard.energyCost}"
     }
 
-    fun addCards(cards: ArrayList<Card>,listener: ArrayList<OnClickListener>){
+    fun addCards(cards: ArrayList<Card>, listener: ArrayList<OnClickListener>){
         cardList.addAll(cards)
         listenerList.addAll(listener)
         notifyDataSetChanged()

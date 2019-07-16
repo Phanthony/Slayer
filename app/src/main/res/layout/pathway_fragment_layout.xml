@@ -8,6 +8,51 @@
         android:background="@android:color/transparent"
         android:visibility="visible">
 
+
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/goldGuidelineVertical"
+            app:layout_constraintGuide_percent="0.04"
+    />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/goldGuidelineHorizontal"
+            app:layout_constraintGuide_percent="0.02"
+    />
+
+    <RelativeLayout
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            app:layout_constraintLeft_toRightOf="@id/goldGuidelineVertical"
+            app:layout_constraintTop_toBottomOf="@id/goldGuidelineHorizontal">
+
+        <ImageView
+                android:id="@+id/gold_Image"
+                android:src="@drawable/gold_sign"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+        />
+
+        <TextView
+                android:id="@+id/goldText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/gold_Image"
+                android:layout_centerInParent="true"
+                android:textSize="30sp"
+                android:textColor="@android:color/white"
+        />
+
+
+    </RelativeLayout>
+
+
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,7 +114,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.21"
+            app:layout_constraintGuide_percent="0.27"
             android:id="@+id/floorCountGuideline"
     />
 

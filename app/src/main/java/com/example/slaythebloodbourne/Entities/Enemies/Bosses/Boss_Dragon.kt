@@ -1,28 +1,28 @@
-package com.example.slaythebloodbourne.Entities.Enemies
+package com.example.slaythebloodbourne.Entities.Enemies.Bosses
 
 import com.example.slaythebloodbourne.Entities.Character
+import com.example.slaythebloodbourne.Entities.Enemies.Enemy
+import com.example.slaythebloodbourne.Entities.Enemies.Move
 import com.example.slaythebloodbourne.R
 
-class Enemy_Zombie(private val floor: Int): Enemy {
-    override val image = R.drawable.enemy_zombie
-    override var energy = 3
-    override val health = 50
+class Boss_Dragon(private val floor: Int): Enemy {
+    override val image = R.drawable.boss_dragon_sign
     override var bonusDamage = 0
-    override val baseDamage = 7
-    override val baseBlock = 3
+    override val baseDamage = 10
     override var bonusBlock = 0
+    override val baseBlock = 3
+    override val health = 150
+    override var energy = 5
 
     override var enemyCurrentHealth = health
     override var enemyBlock = 0
     override var enemyCurrentEnergy = 0
     override var enemyAttack = 0
-
     override val specialAbility = true
 
-    override fun ability(character: Character){
-        bonusDamage += 2
-        enemyCurrentHealth+=2
-        if(enemyCurrentHealth>health) enemyCurrentHealth = health
+    override fun ability(character: Character) {
+        bonusDamage += 5
+        bonusBlock += 2
     }
 
     override fun takeDamage(damage: Int) {
