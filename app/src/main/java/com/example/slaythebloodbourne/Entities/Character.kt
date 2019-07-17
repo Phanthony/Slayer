@@ -6,6 +6,7 @@ import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Strike
 
 class Character {
 
+    //Base stats
     var health = 100
     var playerDeck = arrayListOf<Card>()
     var playerDiscard = arrayListOf<Card>()
@@ -18,8 +19,14 @@ class Character {
     var playerHand = arrayListOf<Card>()
     var playerCurrentEnergy = energy
     var playerBlock = 0
+
+    //Shrine Bonuses
     var playerBonusAttack = 0
     var playerBonusBlock = 0
+
+    //Debuff stats
+    var tempAttack = 0
+    var tempBlock = 0
 
 
     fun addCardsToDeck(){
