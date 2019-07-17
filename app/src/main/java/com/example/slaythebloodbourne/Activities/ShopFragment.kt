@@ -11,9 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.slaythebloodbourne.Entities.Character
-import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Bite
-import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Block
-import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Strike
+import com.example.slaythebloodbourne.Entities.Items.Cards.*
 import com.example.slaythebloodbourne.Entities.Items.Item
 import com.example.slaythebloodbourne.Entities.Items.Item_Potion_100
 import com.example.slaythebloodbourne.Entities.Items.Item_Potion_50
@@ -95,7 +93,7 @@ class ShopFragment(private val player: Character) : Fragment() {
                 }
             }
         }
-        adapter.addItems(itemList, onClickList,goldList)
+        adapter.addItems(itemList, onClickList, goldList)
     }
 
 
@@ -107,12 +105,21 @@ class ShopFragment(private val player: Character) : Fragment() {
         //Select random cards
         for (i in (1..(0..3).random())) {
             val goldCost = (31..54).random()
-            val card = when ((1..5).random()) {
+            val card = when ((1..8).random()) {
                 in (1..2) -> {
                     Card_Strike(player)
                 }
                 in (3..4) -> {
                     Card_Block(player)
+                }
+                5 -> {
+                    Card_Bash(player)
+                }
+                6 -> {
+                    Card_AttackBreak(player)
+                }
+                7 -> {
+                    Card_ShieldBreak(player)
                 }
                 else -> Card_Bite(player)
             }
@@ -128,10 +135,10 @@ class ShopFragment(private val player: Character) : Fragment() {
             itemList.add(card)
             onClickList.add(listener)
         }
-        adapter.addItems(itemList, onClickList,goldList)
+        adapter.addItems(itemList, onClickList, goldList)
     }
 
-    private fun updateGoldText(){
+    private fun updateGoldText() {
         playerGoldText.text = "${player.currentGold}"
     }
 

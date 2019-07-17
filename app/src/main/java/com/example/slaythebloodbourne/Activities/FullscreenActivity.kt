@@ -5,13 +5,10 @@ import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.slaythebloodbourne.Entities.Character
-import com.example.slaythebloodbourne.Entities.Items.Cards.Card
-import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Bite
-import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Block
-import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Strike
 import com.example.slaythebloodbourne.Entities.Enemies.Bosses.Boss_Dragon
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy_Zombie
+import com.example.slaythebloodbourne.Entities.Items.Cards.*
 import com.example.slaythebloodbourne.R
 
 /**
@@ -68,14 +65,18 @@ class FullscreenActivity : FragmentActivity() {
 
     fun randomCard(player : Character): Card? {
         return when ((1..3).random()) {
-            1 -> when ((1..5).random()) {
+            1 -> when ((1..8).random()) {
                 in (1..2) -> {
                     Card_Strike(player)
                 }
                 in (3..4) -> {
                     Card_Block(player)
                 }
-                else -> Card_Bite(player)
+                5 -> Card_Bite(player)
+                6 -> Card_AttackBreak(player)
+                7 -> Card_ShieldBreak(player)
+                8 -> Card_Bash(player)
+                else -> { null }
             }
             else -> null
         }

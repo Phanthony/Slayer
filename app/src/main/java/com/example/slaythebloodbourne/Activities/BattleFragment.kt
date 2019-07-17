@@ -151,6 +151,7 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
         if (playable) {
             turnEngine.playCard(card)
             animatePlayer()
+            updateEnemyMoves()
             updateEnemyHealth()
             updatePlayerHealth()
             updatePlayerEnergyText()
