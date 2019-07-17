@@ -85,7 +85,7 @@
             app:layout_constraintBottom_toTopOf="@+id/pathWayButtonGuidelineHorizontal"
             app:layout_constraintRight_toRightOf="@id/pathWayButtonGuidelineLeftMargin"
             android:scaleType="fitXY"
-            android:background="@android:color/darker_gray"
+            android:background="@drawable/button_border"
 
     />
 
@@ -97,7 +97,7 @@
             app:layout_constraintLeft_toRightOf="@id/buttonPathOne"
             app:layout_constraintRight_toLeftOf="@id/buttonPathThree"
             android:scaleType="fitXY"
-            android:background="@android:color/darker_gray"
+            android:background="@drawable/button_border"
     />
 
     <androidx.appcompat.widget.AppCompatImageButton
@@ -107,7 +107,7 @@
             app:layout_constraintBottom_toTopOf="@+id/pathWayButtonGuidelineHorizontal"
             app:layout_constraintLeft_toLeftOf="@+id/pathWayButtonGuidelineRightMargin"
             android:scaleType="fitXY"
-            android:background="@android:color/darker_gray"
+            android:background="@drawable/button_border"
     />
 
     <androidx.constraintlayout.widget.Guideline

@@ -40,7 +40,7 @@ class PathwayFragment : Fragment() {
                         setButtonListener(0, currentRoom)
                     }
                     in (102..130) -> {
-                        currentRoom.setImageResource(android.R.color.darker_gray)
+                        currentRoom.setImageResource(R.drawable.button_border)
                         setButtonListener(5, currentRoom)
                     }
                 }

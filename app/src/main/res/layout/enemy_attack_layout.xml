@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/enemy_attack_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        >
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:paddingVertical="2dp"
+            android:id="@+id/enemy_attack_image_view"
+            android:layout_width="46dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/sword_sign"
+    />
+
+    <TextView
+            android:textSize="20sp"
+            android:text="99"
+            android:textColor="@android:color/white"
+            android:id="@+id/enemy_attack_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@id/enemy_attack_image_view"
+    />
+
+</RelativeLayout>

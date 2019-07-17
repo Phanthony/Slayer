@@ -2,24 +2,24 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
+        xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"
+        android:background="@drawable/bg_dungeon"
         android:id="@+id/mainOuterBattleLayout">
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/enemyStartGuideline"
+            android:id="@+id/enemy_left_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent="0.20"
+            app:layout_constraintGuide_percent="0.49"
             android:orientation="vertical"
-    />
+            tools:visibility="visible"/>
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/enemyEndGuideline"
+            android:id="@+id/enemy_right_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintGuide_percent="0.80"
+            app:layout_constraintGuide_percent="0.9"
             android:orientation="vertical"
     />
 
@@ -27,215 +27,290 @@
             android:id="@+id/enemyImage"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintLeft_toRightOf="@id/enemyStartGuideline"
-            app:layout_constraintRight_toLeftOf="@id/enemyEndGuideline"
-            app:layout_constraintTop_toBottomOf="@id/bottomEnemyDisplayGuideline"
-            app:layout_constraintBottom_toTopOf="@id/energyHealthDisplayGuideline"
+            app:layout_constraintLeft_toRightOf="@id/enemy_left_guideline"
+            app:layout_constraintRight_toLeftOf="@id/enemy_right_guideline"
+            app:layout_constraintTop_toBottomOf="@id/enemy_top_guideline"
+            app:layout_constraintBottom_toTopOf="@id/enemy_bottom_guideline"
             android:layout_margin="15dp"
-            android:background="@android:color/transparent"
             android:src="@drawable/enemy_zombie"
     />
 
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/bottomEnemyDisplayGuideline"
+            android:id="@+id/enemy_top_guideline"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.18194254"/>
+            app:layout_constraintGuide_percent="0.13"/>
 
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/bottomEnemyDisplayGuideline2"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.14"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-            android:background="@android:color/transparent"
-            android:id="@+id/cardRecycleView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="@id/mainOuterBattleLayout"
-            app:layout_constraintTop_toTopOf="@id/cardDisplayGuideline"
-    />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:id="@+id/enemyStatLayout"
-            app:layout_constraintTop_toTopOf="@id/mainOuterBattleLayout"
-            app:layout_constraintBottom_toTopOf="@+id/bottomEnemyDisplayGuideline2"
-            android:background="@android:color/transparent"
-            android:orientation="horizontal"
-            app:layout_constraintVertical_bias="1.0">
-
-        <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/enemyBlockGuideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintGuide_percent="0.72"
-                android:orientation="vertical"
-        />
-
-        <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/enemyAttackGuideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintGuide_percent="0.2"
-                android:orientation="vertical"
-        />
-
-
-        <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
-                android:id="@+id/enemyBlockImage"
-                android:src="@drawable/shield_sign"
-                android:scaleType="centerInside"
-                app:layout_constraintRight_toRightOf="@id/enemyBlockGuideline"
-        />
-
-        <androidx.appcompat.widget.AppCompatImageView
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
-                android:id="@+id/enemyAttackImage"
-                android:src="@drawable/sword_sign"
-                android:scaleType="centerInside"
-                app:layout_constraintRight_toRightOf="@id/enemyAttackGuideline"
-        />
-
-        <TextView
-                android:id="@+id/enemyAttackNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="10dp"
-                android:textColor="#FF0000"
-                android:textSize="80sp"
-                app:layout_constraintLeft_toRightOf="@id/enemyAttackImage"
-        />
-
-        <TextView
-                android:id="@+id/enemyBlockNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="10dp"
-                android:textColor="#FF0000"
-                android:textSize="80sp"
-                app:layout_constraintLeft_toRightOf="@id/enemyBlockImage"
-        />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.constraintlayout.widget.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/energyHealthDisplayGuideline"
-            app:layout_constraintGuide_percent="0.62"
+            android:id="@+id/enemy_bottom_guideline"
+            app:layout_constraintGuide_percent="0.41"
             android:orientation="horizontal"
     />
 
     <androidx.constraintlayout.widget.Guideline
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/cardDisplayGuideline"
-            app:layout_constraintGuide_percent="0.75"
+            android:id="@+id/energyHealthDisplayGuideline"
+            app:layout_constraintGuide_percent="0.68"
             android:orientation="horizontal"
     />
 
-    <androidx.constraintlayout.widget.Guideline
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/playerHealthBarDisplayGuideline"
-            app:layout_constraintGuide_percent="0.72"
-            android:orientation="horizontal"
-    />
+    <RelativeLayout
 
-    <ProgressBar
-            android:id="@+id/playerHealthBar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            app:layout_constraintTop_toTopOf="@id/playerHealthBarDisplayGuideline"
-            app:layout_constraintBottom_toTopOf="@id/cardDisplayGuideline"
-            android:indeterminate="false"
-            android:max="999"
-            android:progress="999"
-            android:scaleX="-1"
-            android:progressDrawable="@drawable/health_bar"
-    />
-
-    <ProgressBar
-            android:id="@+id/enemyHealthBar"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            app:layout_constraintTop_toTopOf="@id/bottomEnemyDisplayGuideline2"
-            app:layout_constraintBottom_toTopOf="@id/bottomEnemyDisplayGuideline"
-            android:indeterminate="false"
-            android:max="999"
-            android:progress="0"
-            android:scaleX="-1"
-            android:progressDrawable="@drawable/health_bar"
-    />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toTopOf="@id/energyHealthDisplayGuideline"
-            app:layout_constraintBottom_toTopOf="@+id/playerHealthBarDisplayGuideline"
-            android:id="@+id/healthEnergyDisplayLayout"
-            android:background="@android:color/transparent"
-    >
-        <androidx.constraintlayout.widget.Guideline
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintGuide_percent="0.46"
-                android:orientation="vertical"
-                android:id="@+id/endTurnStartGuideline"
-        />
+            app:layout_constraintBottom_toBottomOf="@id/mainOuterBattleLayout"
+            android:id="@+id/player_ui"
+            android:background="@drawable/player_ui_border">
 
-        <androidx.constraintlayout.widget.Guideline
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintGuide_percent="0.78"
-                android:orientation="vertical"
-                android:id="@+id/endTurnEndGuideline"
-        />
+        <RelativeLayout
+                android:paddingHorizontal="5dp"
+                android:id="@+id/attack_energy_defense_button_layout"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@drawable/player_ui_energy_attack_defense_border">
 
-        <Button
-                android:id="@+id/endTurnButton"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                app:layout_constraintLeft_toRightOf="@id/endTurnStartGuideline"
-                app:layout_constraintRight_toLeftOf="@id/endTurnEndGuideline"
+            <RelativeLayout
+                    android:layout_margin="6dp"
+                    android:id="@+id/attack_energy_defense_icon_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_toStartOf="@id/finish_turn_button"
+            >
+
+                <RelativeLayout
+                        android:id="@+id/energy_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@id/defense_layout"
+                >
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                            android:padding="4dp"
+                            android:id="@+id/energy_image_view"
+                            android:layout_width="56dp"
+                            android:layout_height="41dp"
+                            android:src="@drawable/energy_sign"
+                    />
+
+                    <TextView
+                            android:textSize="20sp"
+                            android:text="99"
+                            android:textColor="@android:color/white"
+                            android:id="@+id/energy_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_centerInParent="true"
+                            android:layout_toEndOf="@id/energy_image_view"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:id="@+id/attack_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                >
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                            android:paddingVertical="2dp"
+                            android:id="@+id/attack_image_view"
+                            android:layout_width="54dp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/sword_sign"
+                    />
+
+                    <TextView
+                            android:textSize="20sp"
+                            android:text="99"
+                            android:textColor="@android:color/white"
+                            android:id="@+id/attack_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_centerInParent="true"
+                            android:layout_toEndOf="@id/attack_image_view"
+                    />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                        android:id="@+id/defense_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_toEndOf="@id/attack_layout"
+                >
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                            android:padding="5dp"
+                            android:id="@+id/defense_image_view"
+                            android:layout_width="66dp"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/shield_sign"
+                    />
+
+                    <TextView
+                            android:textSize="20sp"
+                            android:text="99"
+                            android:textColor="@android:color/white"
+                            android:id="@+id/defense_text_view"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:layout_centerInParent="true"
+                            android:layout_toEndOf="@id/defense_image_view"
+                    />
+
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+            <Button
+                    android:id="@+id/finish_turn_button"
+                    android:layout_width="115dp"
+                    android:layout_height="38dp"
+                    android:text="End\nTurn"
+                    android:textColor="@android:color/white"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/button_border"
+                    android:layout_margin="8dp"
+                    android:padding="1dp"
+                    android:layout_marginTop="8dp" android:layout_marginBottom="8dp" android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp" android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
+
+        </RelativeLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
                 android:layout_margin="5dp"
-                android:text="END TURN"
-                android:background="@android:color/darker_gray"
+                android:background="@android:color/transparent"
+                android:id="@+id/cardRecycleView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/attack_energy_defense_button_layout"
         />
 
-        <TextView
-                android:id="@+id/healthNumberValue"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:layout_constraintRight_toLeftOf="@id/endTurnStartGuideline"
-                app:layout_constraintLeft_toLeftOf="@id/healthEnergyDisplayLayout"
-                android:layout_marginHorizontal="10dp"
-                android:text="999/999"
-                android:textSize="40sp"
-                android:textColor="#33FF33"
-        />
+    </RelativeLayout>
 
-        <TextView
-                android:id="@+id/energyNumberValue"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                app:layout_constraintLeft_toLeftOf="@id/endTurnEndGuideline"
-                app:layout_constraintRight_toRightOf="@id/healthEnergyDisplayLayout"
-                android:layout_marginHorizontal="10dp"
-                android:text="99"
-                android:textSize="50sp"
-                android:textColor="#33ECFF"
-        />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/player_left_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_percent="0.1"
+            android:orientation="vertical"
+            tools:visibility="visible"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/player_right_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintGuide_percent="0.45"
+            android:orientation="vertical"
+    />
+
+    <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/playerImage"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toRightOf="@id/player_left_guideline"
+            app:layout_constraintRight_toLeftOf="@id/player_right_guideline"
+            app:layout_constraintTop_toBottomOf="@id/player_top_guideline"
+            app:layout_constraintBottom_toTopOf="@id/player_bottom_guideline"
+            android:layout_margin="15dp"
+            android:src="@drawable/character_image"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/player_top_guideline"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.41"/>
+
+    <androidx.constraintlayout.widget.Guideline
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/player_bottom_guideline"
+            app:layout_constraintGuide_percent="0.66"
+            android:orientation="horizontal"
+    />
+
+
+    <ProgressBar
+            android:paddingVertical="4dp"
+            android:id="@+id/playerHealthBar"
+            android:layout_width="0dp"
+            android:layout_height="27dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            app:layout_constraintLeft_toLeftOf="@id/player_left_guideline"
+            app:layout_constraintRight_toRightOf="@id/player_right_guideline"
+            app:layout_constraintBottom_toTopOf="@id/playerImage"
+            android:indeterminate="false"
+            android:max="999"
+            android:progress="784"
+            android:scaleX="-1"
+            android:progressDrawable="@drawable/health_bar"
+    />
+
+    <TextView
+
+            app:layout_constraintLeft_toLeftOf="@id/player_left_guideline"
+            app:layout_constraintRight_toRightOf="@id/player_right_guideline"
+            app:layout_constraintTop_toTopOf="@id/playerHealthBar"
+            app:layout_constraintBottom_toBottomOf="@id/playerHealthBar"
+            android:id="@+id/player_health_text"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <ProgressBar
+            android:id="@+id/enemyHealthBar"
+            android:layout_width="0dp"
+            android:layout_height="27dp"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            app:layout_constraintLeft_toLeftOf="@id/enemy_left_guideline"
+            app:layout_constraintRight_toRightOf="@id/enemy_right_guideline"
+            app:layout_constraintBottom_toTopOf="@id/enemyImage"
+            android:indeterminate="false"
+            android:max="999"
+            android:progress="784"
+            android:scaleX="-1"
+            android:progressDrawable="@drawable/health_bar"
+            android:paddingVertical="4dp"
+    />
+
+    <TextView
+            app:layout_constraintLeft_toLeftOf="@id/enemy_left_guideline"
+            app:layout_constraintRight_toRightOf="@id/enemy_right_guideline"
+            app:layout_constraintTop_toTopOf="@id/enemyHealthBar"
+            app:layout_constraintBottom_toBottomOf="@id/enemyHealthBar"
+            android:id="@+id/enemy_health_text"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    <LinearLayout
+            android:id="@+id/enemy_action_layout"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            app:layout_constraintLeft_toLeftOf="@id/enemy_left_guideline"
+            app:layout_constraintRight_toRightOf="@id/enemy_right_guideline"
+            app:layout_constraintBottom_toTopOf="@id/enemyHealthBar"
+            android:gravity="center"
+            android:orientation="horizontal"
+    >
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

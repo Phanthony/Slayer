@@ -10,6 +10,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.example.slaythebloodbourne.Entities.Items.Cards.Card
 import com.example.slaythebloodbourne.Entities.Character
@@ -35,6 +36,8 @@ class VictoryFragment(private val card: Card?, private val gold:Int, private val
             rewardCard = Button(this.context)
             rewardCard!!.text = "${card.name}\n\n${card.description}"
             rewardCard!!.textSize = 25.0F
+            rewardCard!!.background = ContextCompat.getDrawable(this.context!!,R.drawable.button_border)
+            rewardCard!!.setTextColor(Color.parseColor("#FFFFFF"))
             rewardCard!!.setOnClickListener {
                 player.playerDeck.add(card)
                 player.playerDeck.shuffle()
