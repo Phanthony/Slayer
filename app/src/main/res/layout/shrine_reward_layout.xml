@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:id="@+id/shrine_reward_text_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:elevation="100dp"
+>
+
+    <LinearLayout
+            android:layout_margin="10dp"
+            android:orientation="vertical"
+            android:id="@+id/shrine_text_layout"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:padding="5dp"
+            android:background="@drawable/textbox_border"
+            android:layout_gravity="center"
+    >
+        <TextView
+                android:paddingTop="20dp"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:text="The gods grant you"
+                android:id="@+id/shrine_reward_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAllCaps="true"
+
+        />
+
+        <LinearLayout
+                android:layout_margin="10dp"
+                android:orientation="horizontal"
+                android:id="@+id/shrine_reward_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+        >
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <Button
+            android:layout_marginTop="50dp"
+            android:background="@drawable/button_border"
+            android:textAllCaps="true"
+            android:text="ok"
+            android:textSize="40sp"
+            android:id="@+id/shrine_leave_button"
+            android:layout_width="150dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center_horizontal"
+
+    />
+
+</LinearLayout>

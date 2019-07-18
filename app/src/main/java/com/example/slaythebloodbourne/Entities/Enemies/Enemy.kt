@@ -3,9 +3,9 @@ package com.example.slaythebloodbourne.Entities.Enemies
 import com.example.slaythebloodbourne.Entities.Character
 
 interface Enemy {
-    var bonusDamage: Int
+    var tempDamage: Int
     val baseDamage: Int
-    var bonusBlock: Int
+    var tempBlock: Int
     val baseBlock: Int
     val health: Int
     var energy: Int

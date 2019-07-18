@@ -10,14 +10,10 @@ class Card_AttackBreak(val player: Character): Card {
     override val special = true
 
     override fun ability(player: Character, enemy: Enemy) {
-        val calc = enemy.bonusDamage - 3
-        enemy.bonusDamage = when{
-            calc > 0 -> calc
-            else -> 0
-        }
+        enemy.tempDamage -= 3
     }
 
     override val name = "Attack Break"
     override val description: String
-        get() = "Enemy loses 3 damage next turn"
+        get() = "Enemy loses 3 damage"
 }

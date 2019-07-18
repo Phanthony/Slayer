@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.slaythebloodbourne.Entities.Items.Cards.Card
 import com.example.slaythebloodbourne.R
 import kotlinx.android.synthetic.main.recyclerview_cards_layout.view.*
+import org.w3c.dom.Text
 
 
 class RecyclerViewCardsAdapter(val cardList: ArrayList<Card>, val listenerList: ArrayList<OnClickListener>) : RecyclerView.Adapter<RecyclerViewCardsAdapter.ViewHolder>(){
@@ -17,6 +18,8 @@ class RecyclerViewCardsAdapter(val cardList: ArrayList<Card>, val listenerList: 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val cardButton: Button = itemView.cardButton
         val cardEnergy: TextView = itemView.cardEnergyCost
+        val cardTitle: TextView = itemView.card_text_title
+        val cardDesc: TextView = itemView.card_text_description
     }
 
 
@@ -32,7 +35,8 @@ class RecyclerViewCardsAdapter(val cardList: ArrayList<Card>, val listenerList: 
     override fun onBindViewHolder(holder: ViewHolder, position: Int){
         val currentListener = listenerList[position]
         val currentCard = cardList[position]
-        holder.cardButton.text = "${currentCard.name}\n\n${currentCard.description}"
+        holder.cardTitle.text = currentCard.name
+        holder.cardDesc.text = currentCard.description
         holder.cardButton.setOnClickListener(currentListener)
         holder.cardEnergy.text = "${currentCard.energyCost}"
     }

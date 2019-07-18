@@ -1,10 +1,14 @@
 package com.example.slaythebloodbourne.Activities
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
+import android.view.View.TEXT_ALIGNMENT_CENTER
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -23,7 +27,6 @@ import com.example.slaythebloodbourne.Modules.RecyclerViewCardsAdapter
 import com.example.slaythebloodbourne.R
 import com.example.slaythebloodbourne.TurnEngine
 import kotlinx.coroutines.*
-
 
 class BattleFragment(private val player: Character, val floor: Int, val enemy: Enemy) : Fragment() {
 
@@ -56,6 +59,8 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
     lateinit var enemyTop: Guideline
     lateinit var enemyBottom: Guideline
 
+    lateinit var enemyDameDoneLayout: LinearLayout
+    lateinit var playerDameDoneLayout: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val main = (activity as FullscreenActivity)
@@ -71,17 +76,19 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
         view.findViewById<AppCompatImageView>(R.id.enemyImage).setImageResource(enemy.image)
 
         enemyAction = view.findViewById(R.id.enemy_action_layout)
+        enemyDameDoneLayout = view.findViewById(R.id.enemy_attack_number_display_layout)
+        playerDameDoneLayout = view.findViewById(R.id.player_attack_number_display_layout)
 
         //Get UI pieces that update
         if (enemy.enemyBlock != 0) {
-            val inflater = LayoutInflater.from(context)
-            val blockLayout = inflater.inflate(R.layout.enemy_defense_layout, enemyAction)
+            val layouBuilder = LayoutInflater.from(context)
+            val blockLayout = layouBuilder.inflate(R.layout.enemy_defense_layout, enemyAction)
             blockLayout.findViewById<TextView>(R.id.enemy_defense_text_view).text = "${enemy.enemyBlock}"
         }
 
         if (enemy.enemyAttack != 0) {
-            val inflater = LayoutInflater.from(context)
-            val attackLayout = inflater.inflate(R.layout.enemy_attack_layout, enemyAction)
+            val layoutBuilder = LayoutInflater.from(context)
+            val attackLayout = layoutBuilder.inflate(R.layout.enemy_attack_layout, enemyAction)
             attackLayout.findViewById<TextView>(R.id.enemy_attack_text_view).text = "${enemy.enemyAttack}"
         }
 
@@ -123,7 +130,10 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
         cardList.layoutManager = LinearLayoutManager(this.context, RecyclerView.HORIZONTAL, false)
         cardList.adapter = adapter
 
+        newTurn()
+
         cardButtonBuilder(player.playerHand)
+
 
         return view
 
@@ -146,20 +156,63 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
         adapter.addCards(cardList, listenerList)
     }
 
-    private fun useCard(card: Card): Boolean {
-        val playable = turnEngine.checkPlayerEnoughEnergy(card)
-        if (playable) {
-            turnEngine.playCard(card)
-            animatePlayer()
-            updateEnemyMoves()
-            updateEnemyHealth()
-            updatePlayerHealth()
-            updatePlayerEnergyText()
-            updatePlayerAttack()
-            updatePlayerBlock()
-            checkBattleState()
+    //UI Functions
+    private fun updatePlayerHealth(){
+        playerHealthBar.progress = player.health - player.playerCurrentHealth
+        playerHealthText.text = "${player.playerCurrentHealth}"
+    }
+
+    private fun updateEnemyHealth(){
+        enemyHealthBar.progress = enemy.health - enemy.enemyCurrentHealth
+        enemyHealthText.text = "${enemy.enemyCurrentHealth}"
+    }
+
+    private fun updatePlayerEnergyText() {
+        playerEnergyText.text = "${player.playerCurrentEnergy}"
+    }
+
+    private fun updateEnemyMoves(wait:Boolean = true) {
+        val context = this.context
+        CoroutineScope(Dispatchers.IO).launch {
+            if(wait) delay(150)
+            withContext(Dispatchers.Main) {
+                enemyAction.removeAllViews()
+            }
+            if (enemy.enemyBlock + enemy.tempBlock != 0) {
+                val inflater = LayoutInflater.from(context)
+                withContext(Dispatchers.Main) {
+                    val blockLayout = inflater.inflate(R.layout.enemy_defense_layout, enemyAction)
+                    blockLayout.findViewById<TextView>(R.id.enemy_defense_text_view).text = "${enemy.enemyBlock + enemy.tempBlock}"
+                }
+            }
+            if (enemy.enemyAttack + enemy.tempDamage > 0) {
+                val inflater = LayoutInflater.from(context)
+                withContext(Dispatchers.Main) {
+                    val attackLayout = inflater.inflate(R.layout.enemy_attack_layout, enemyAction)
+                    attackLayout.findViewById<TextView>(R.id.enemy_attack_text_view).text = "${enemy.enemyAttack + enemy.tempDamage}"
+                }
+            }
         }
-        return playable
+    }
+
+    private fun updatePlayerAttack(){
+        playerBonusAttack.text = "${player.playerBonusAttack}"
+    }
+
+    private fun updatePlayerBlock(){
+        playerBonusBlock.text = "${player.playerBonusBlock}"
+    }
+
+    private fun leaveBattleFragment() {
+        val main = (activity as FullscreenActivity)
+        val rewardCard: Card? = main.randomCard(player)
+        val victoryFragment = VictoryFragment(rewardCard, goldDropped, player)
+        main.replaceCurrentFragmentNoSave(victoryFragment)
+    }
+
+    private fun leaveGame() {
+        val main = (activity as FullscreenActivity)
+        main.createNewGame()
     }
 
     private fun animatePlayer(){
@@ -198,15 +251,76 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
         }
     }
 
+    //Battle Functions
+
+    private fun newTurn(){
+        turnEngine.enemyEnergyIncrease()
+        turnEngine.startTurn()
+        if (checkBattleState()) cardButtonBuilder(player.playerHand)
+        updateEnemyHealth()
+        updateEnemyMoves()
+    }
+
+    private fun useCard(card: Card): Boolean {
+        val playable = turnEngine.checkPlayerEnoughEnergy(card)
+        if (playable) {
+            val damageDone = turnEngine.playCard(card)
+            animatePlayer()
+            if(damageDone!=0){
+                val animation = AnimationUtils.loadAnimation(this.context,R.anim.text_slide_up)
+                val damage = TextView(this.context).apply {
+                    text = "${damageDone*-1}"
+                    setTextColor(Color.parseColor("#ff0000"))
+                    textSize = 45.0F
+                    textAlignment = TEXT_ALIGNMENT_CENTER
+                    typeface = Typeface.DEFAULT_BOLD
+                }
+                damage.startAnimation(animation)
+                enemyDameDoneLayout.addView(damage)
+                CoroutineScope(Dispatchers.Main).launch{
+                    withContext(Dispatchers.IO){
+                        delay(150)
+                    }
+                    enemyDameDoneLayout.removeView(damage)
+                }
+
+            }
+            updateEnemyMoves(false)
+            updateEnemyHealth()
+            updatePlayerHealth()
+            updatePlayerEnergyText()
+            updatePlayerAttack()
+            updatePlayerBlock()
+            checkBattleState()
+        }
+        return playable
+    }
 
     private fun endTurn() {
-        turnEngine.endTurn()
+        val damageDone = turnEngine.endTurn()
         animateEnemy()
         updatePlayerHealth()
         updatePlayerEnergyText()
-        updateEnemyMoves()
         updateEnemyHealth()
-        if (checkBattleState()) cardButtonBuilder(player.playerHand)
+        if(damageDone!=0){
+            val animation = AnimationUtils.loadAnimation(this.context,R.anim.text_slide_up)
+            val damage = TextView(this.context).apply {
+                text = "${damageDone*-1}"
+                setTextColor(Color.parseColor("#ff0000"))
+                textSize = 45.0F
+                textAlignment = TEXT_ALIGNMENT_CENTER
+                typeface = Typeface.DEFAULT_BOLD
+            }
+            damage.startAnimation(animation)
+            playerDameDoneLayout.addView(damage)
+            CoroutineScope(Dispatchers.Main).launch{
+                withContext(Dispatchers.IO){
+                    delay(50)
+                }
+                playerDameDoneLayout.removeView(damage)
+            }
+        }
+        newTurn()
     }
 
     private fun checkBattleState(): Boolean {
@@ -223,61 +337,4 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
         return true
     }
 
-    private fun updatePlayerHealth(){
-        playerHealthBar.progress = player.health - player.playerCurrentHealth
-        playerHealthText.text = "${player.playerCurrentHealth}"
-    }
-
-    private fun updateEnemyHealth(){
-        enemyHealthBar.progress = enemy.health - enemy.enemyCurrentHealth
-        enemyHealthText.text = "${enemy.enemyCurrentHealth}"
-    }
-
-    private fun updatePlayerEnergyText() {
-        playerEnergyText.text = "${player.playerCurrentEnergy}"
-    }
-
-    private fun updateEnemyMoves() {
-        val context = this.context
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.Main) {
-                enemyAction.removeAllViews()
-            }
-            delay(150)
-            if (enemy.enemyBlock != 0) {
-                val inflater = LayoutInflater.from(context)
-                withContext(Dispatchers.Main) {
-                    val blockLayout = inflater.inflate(R.layout.enemy_defense_layout, enemyAction)
-                    blockLayout.findViewById<TextView>(R.id.enemy_defense_text_view).text = "${enemy.enemyBlock}"
-                }
-            }
-            if (enemy.enemyAttack != 0) {
-                val inflater = LayoutInflater.from(context)
-                withContext(Dispatchers.Main) {
-                    val attackLayout = inflater.inflate(R.layout.enemy_attack_layout, enemyAction)
-                    attackLayout.findViewById<TextView>(R.id.enemy_attack_text_view).text = "${enemy.enemyAttack}"
-                }
-            }
-        }
-    }
-
-    private fun updatePlayerAttack(){
-        playerBonusAttack.text = "${player.playerBonusAttack}"
-    }
-
-    private fun updatePlayerBlock(){
-        playerBonusBlock.text = "${player.playerBonusBlock}"
-    }
-
-    private fun leaveBattleFragment() {
-        val main = (activity as FullscreenActivity)
-        val rewardCard: Card? = main.randomCard(player)
-        val victoryFragment = VictoryFragment(rewardCard, goldDropped, player)
-        main.replaceCurrentFragmentNoSave(victoryFragment)
-    }
-
-    private fun leaveGame() {
-        val main = (activity as FullscreenActivity)
-        main.createNewGame()
-    }
 }

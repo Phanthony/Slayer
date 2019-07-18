@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/shrine_main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+>
+    <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/shrine_flash_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:elevation="10dp"
+    >
+    </LinearLayout>
+    
+    <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/shrine_image_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center">
+
+        <TextView
+                android:layout_margin="8dp"
+                android:elevation="1dp"
+                android:id="@+id/shrine_praying_text"
+                android:layout_width="300dp"
+                android:layout_height="100dp"
+                android:background="@drawable/textbox_border"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@android:color/white"
+                android:text="praying to the gods..."
+                android:gravity="center"
+                android:textSize="20sp"
+                android:textAllCaps="true"
+        />
+
+        <ImageView
+                android:paddingBottom="100dp"
+                android:id="@+id/shrine_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/shrine_icon"
+                android:layout_gravity="center_horizontal"
+                android:scaleType="fitXY"
+        />
+
+
+    </LinearLayout>
+
+</FrameLayout>

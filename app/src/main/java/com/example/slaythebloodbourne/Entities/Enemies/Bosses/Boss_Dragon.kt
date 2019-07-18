@@ -7,9 +7,9 @@ import com.example.slaythebloodbourne.R
 
 class Boss_Dragon(private val floor: Int): Enemy {
     override val image = R.drawable.boss_dragon_sign
-    override var bonusDamage = 0
+    override var tempDamage = 0
     override val baseDamage = 10
-    override var bonusBlock = 0
+    override var tempBlock = 0
     override val baseBlock = 3
     override val health = 150
     override var energy = 5
@@ -21,8 +21,8 @@ class Boss_Dragon(private val floor: Int): Enemy {
     override val specialAbility = true
 
     override fun ability(character: Character) {
-        bonusDamage += 5
-        bonusBlock += 2
+        tempDamage += 5
+        tempBlock += 2
     }
 
     override fun takeDamage(damage: Int) {
@@ -31,7 +31,7 @@ class Boss_Dragon(private val floor: Int): Enemy {
 
     override fun chooseMove(): Move {
         val result = (0..1).random()
-        return if (result == 1) Move(baseDamage + bonusDamage, 0)
-        else Move(0, baseBlock + bonusBlock)
+        return if (result == 1) Move(baseDamage + tempDamage, 0)
+        else Move(0, baseBlock + tempBlock)
     }
 }

@@ -7,10 +7,10 @@ class Enemy_Zombie(private val floor: Int): Enemy {
     override val image = R.drawable.enemy_zombie
     override var energy = 3
     override val health = 50
-    override var bonusDamage = 0
-    override val baseDamage = 7
-    override val baseBlock = 3
-    override var bonusBlock = 0
+    override var tempDamage = 0
+    override val baseDamage: Int get() = (5..8).random()
+    override val baseBlock: Int get() = (3..5).random()
+    override var tempBlock = 0
 
     override var enemyCurrentHealth = health
     override var enemyBlock = 0
@@ -20,8 +20,9 @@ class Enemy_Zombie(private val floor: Int): Enemy {
     override val specialAbility = true
 
     override fun ability(character: Character){
-        bonusDamage += 2
-        enemyCurrentHealth+=2
+        tempDamage += 5
+        tempBlock += 5
+        enemyCurrentHealth+=5
         if(enemyCurrentHealth>health) enemyCurrentHealth = health
     }
 
@@ -31,7 +32,7 @@ class Enemy_Zombie(private val floor: Int): Enemy {
 
     override fun chooseMove(): Move {
         val result = (0..1).random()
-        return if (result == 1) Move(baseDamage + bonusDamage, 0)
-        else Move(0, baseBlock + bonusBlock)
+        return if (result == 1) Move(baseDamage, 0)
+        else Move(0, baseBlock)
     }
 }

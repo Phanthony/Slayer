@@ -19,14 +19,14 @@ class PathwayFragment : Fragment() {
     private val player = Character().apply {
         addCardsToDeck()
         currentGold = 9999
-        playerBonusAttack = 30
+        playerBonusAttack = 10
     }
 
     private fun setRooms() {
-        if(levelCount%10 != 0) {
+        if (levelCount % 10 != 0) {
             for (i in 0..2) {
                 val currentRoom = pathwayList[i]
-                when ((0..130).random()) {
+                when ((0..150).random()) {
                     in (0..14) -> {
                         currentRoom.setImageResource(R.drawable.treasure_sign)
                         setButtonListener(2, currentRoom)
@@ -43,10 +43,13 @@ class PathwayFragment : Fragment() {
                         currentRoom.setImageResource(R.drawable.button_border)
                         setButtonListener(5, currentRoom)
                     }
+                    in (131..150) -> {
+                        currentRoom.setImageResource(R.drawable.shrine_icon)
+                        setButtonListener(4, currentRoom)
+                    }
                 }
             }
-        }
-        else{
+        } else {
             for (i in 0..2) {
                 val currentRoom = pathwayList[i]
                 currentRoom.setImageResource(R.drawable.boss_sign)
@@ -67,7 +70,7 @@ class PathwayFragment : Fragment() {
         when (code) {
             0 -> {
                 button.setOnClickListener {
-                    val newBattle = BattleFragment(player,levelCount,main.randomEnemy(levelCount))
+                    val newBattle = BattleFragment(player, levelCount, main.randomEnemy(levelCount))
                     levelCount++
                     main.replaceCurrentFragmentNoSave(newBattle)
                 }
@@ -84,23 +87,28 @@ class PathwayFragment : Fragment() {
                 button.setOnClickListener {
                     val rewardCard = main.randomCard(player)
                     val rewardGold = main.randomGold(levelCount)
-                    val chestReward = VictoryFragment(rewardCard,rewardGold,player,true)
+                    val chestReward = VictoryFragment(rewardCard, rewardGold, player, true)
                     levelCount++
                     main.replaceCurrentFragmentNoSave(chestReward)
                 }
             }
             3 -> {
                 button.setOnClickListener {
-                    val newBattle = BattleFragment(player,levelCount,main.randomBoss(levelCount))
+                    val newBattle = BattleFragment(player, levelCount, main.randomBoss(levelCount))
                     levelCount++
                     main.replaceCurrentFragmentNoSave(newBattle)
                 }
             }
             4 -> {
-
+                button.setOnClickListener {
+                    val shrineReward = main.randomShrine()
+                    val shrine = ShrineFragment(player, shrineReward)
+                    levelCount++
+                    main.replaceCurrentFragmentNoSave(shrine)
+                }
             }
             5 -> {
-                button.setOnClickListener{
+                button.setOnClickListener {
                     levelCount++
                     currentFloorTextView.text = "Floor $levelCount"
                     setRooms()

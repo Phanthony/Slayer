@@ -1,8 +1,6 @@
 package com.example.slaythebloodbourne.Entities
 
-import com.example.slaythebloodbourne.Entities.Items.Cards.Card
-import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Block
-import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Strike
+import com.example.slaythebloodbourne.Entities.Items.Cards.*
 
 class Character {
 
@@ -32,7 +30,7 @@ class Character {
     fun addCardsToDeck(){
         for(i in 1..4){
             val baseStrike = Card_Strike(this)
-            val baseBlock = Card_Block(this)
+            val baseBlock = Card_AttackBreak(this)
             playerDeck.add(baseBlock)
             playerDeck.add(baseStrike)
         }

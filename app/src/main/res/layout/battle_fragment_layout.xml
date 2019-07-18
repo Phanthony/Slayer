@@ -4,7 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_dungeon"
+        android:background="@android:color/transparent"
         android:id="@+id/mainOuterBattleLayout">
 
     <androidx.constraintlayout.widget.Guideline
@@ -197,6 +197,36 @@
         />
 
     </RelativeLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/enemy_attack_number_display_layout"
+            app:layout_constraintLeft_toLeftOf="@id/enemy_left_guideline"
+            app:layout_constraintRight_toRightOf="@id/enemy_right_guideline"
+            app:layout_constraintBottom_toBottomOf="@id/enemyImage"
+            app:layout_constraintTop_toTopOf="@id/enemyHealthBar"
+            android:gravity="center"
+            android:elevation="201dp"
+    >
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/player_attack_number_display_layout"
+            app:layout_constraintLeft_toLeftOf="@id/player_left_guideline"
+            app:layout_constraintRight_toRightOf="@id/player_right_guideline"
+            app:layout_constraintBottom_toBottomOf="@id/playerImage"
+            app:layout_constraintTop_toTopOf="@id/playerHealthBar"
+            android:gravity="center"
+            android:elevation="201dp"
+    >
+
+    </LinearLayout>
 
 
     <androidx.constraintlayout.widget.Guideline

@@ -12,10 +12,8 @@ const val BATTLE_WON = 2
 class TurnEngine(val player: Character, private val enemy: Enemy) {
 
     var battleState = BATTLE_ONGOING
-    var enemyMove = startTurn()
 
-    private fun startTurn(): Move {
-        enemyEnergyIncrease()
+    fun startTurn() {
         val enemyMove = enemy.chooseMove()
         if (battleState == BATTLE_ONGOING) {
             enemy.enemyBlock = enemyMove.block
@@ -23,10 +21,9 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
             playerDrawFromHand()
         }
         player.playerCurrentEnergy = player.energy
-        return enemyMove
     }
 
-    fun playerDrawFromHand() {
+    private fun playerDrawFromHand() {
         if (battleState == BATTLE_ONGOING) {
             while (player.playerHand.size < player.maxCards) {
                 if (player.playerDeck.isEmpty()) {
@@ -37,16 +34,19 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
         }
     }
 
-    fun endTurn() {
+    fun endTurn(): Int {
+        var enemyDamageDone = 0
         if (battleState == BATTLE_ONGOING) {
-            val enemyDamageDone =
-                if (enemy.enemyAttack - player.playerBlock > 0) enemy.enemyAttack - player.playerBlock else 0
+            enemyDamageDone =
+                if (enemy.enemyAttack + enemy.tempDamage - player.playerBlock - player.tempBlock - player.playerBonusBlock > 0)
+                    enemy.enemyAttack + enemy.tempDamage - player.playerBlock - player.tempBlock - player.playerBonusBlock else 0
             player.takeDamage(enemyDamageDone)
             if (player.playerCurrentHealth <= 0) {
-                battleState = BATTLE_LOST; return
+                battleState = BATTLE_LOST; return 0
             }
         }
         resetTurn()
+        return enemyDamageDone
     }
 
 
@@ -56,7 +56,7 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
         discardPile.clear()
     }
 
-    private fun enemyEnergyIncrease() {
+    fun enemyEnergyIncrease() {
         if (enemy.specialAbility) {
             if (enemy.enemyCurrentEnergy < enemy.energy) {
                 enemy.enemyCurrentEnergy++
@@ -71,7 +71,7 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
         return (card.energyCost <= player.playerCurrentEnergy)
     }
 
-    fun playCard(card: Card) {
+    fun playCard(card: Card): Int {
         if (battleState == BATTLE_ONGOING) {
             player.playerCurrentEnergy -= card.energyCost
             if (card.special) card.ability(player, enemy)
@@ -80,7 +80,9 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
                 when (card.attack) {
                     0 -> 0
                     else -> {
-                        if (card.attack + player.playerBonusAttack - enemy.enemyBlock > 0) card.attack + player.playerBonusAttack - enemy.enemyBlock else 0
+                        if (card.attack + player.playerBonusAttack + player.tempAttack
+                            - enemy.enemyBlock - enemy.tempBlock > 0
+                        ) card.attack + player.playerBonusAttack + player.tempAttack - enemy.enemyBlock - enemy.tempBlock else 0
                     }
                 }
             enemy.takeDamage(playerDamageDone)
@@ -90,13 +92,21 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
             if (enemy.enemyCurrentHealth <= 0) {
                 battleState = BATTLE_WON
             }
+            return playerDamageDone
         }
+        return 0
     }
 
     private fun resetTurn() {
+        enemy.enemyAttack = 0
+        enemy.enemyBlock = 0
+        enemy.tempDamage = 0
+        enemy.tempBlock = 0
         player.playerBlock = 0
         player.playerDiscard.addAll(player.playerHand)
         player.playerHand.clear()
-        enemyMove = startTurn()
+        player.tempBlock = 0
+        player.tempAttack = 0
+
     }
 }

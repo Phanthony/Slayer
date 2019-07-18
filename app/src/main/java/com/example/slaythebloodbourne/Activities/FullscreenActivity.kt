@@ -8,6 +8,7 @@ import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Enemies.Bosses.Boss_Dragon
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy_Zombie
+import com.example.slaythebloodbourne.Entities.Enemies.Move
 import com.example.slaythebloodbourne.Entities.Items.Cards.*
 import com.example.slaythebloodbourne.R
 
@@ -38,12 +39,14 @@ class FullscreenActivity : FragmentActivity() {
 
     fun replaceCurrentFragmentNoSave(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.animator.fragment_slide_in_left,R.animator.fragment_slide_out_left)
             .replace(R.id.fragmentContainer, fragment)
             .commit()
     }
 
     fun replaceCurrentFragmentSave(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
+            .setCustomAnimations(android.R.anim.fade_in,android.R.anim.fade_out)
             .replace(R.id.fragmentContainer, fragment, "PATHWAY")
             .addToBackStack("PATHWAY")
             .commit()
@@ -59,11 +62,12 @@ class FullscreenActivity : FragmentActivity() {
     fun backToPathway() {
         val pathway = supportFragmentManager.findFragmentByTag("PATHWAY")!!
         supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.animator.fragment_slide_in_right,R.animator.fragment_slide_out_right)
             .replace(R.id.fragmentContainer, pathway)
             .commit()
     }
 
-    fun randomCard(player : Character): Card? {
+    fun randomCard(player: Character): Card? {
         return when ((1..3).random()) {
             1 -> when ((1..8).random()) {
                 in (1..2) -> {
@@ -76,7 +80,9 @@ class FullscreenActivity : FragmentActivity() {
                 6 -> Card_AttackBreak(player)
                 7 -> Card_ShieldBreak(player)
                 8 -> Card_Bash(player)
-                else -> { null }
+                else -> {
+                    null
+                }
             }
             else -> null
         }
@@ -105,11 +111,32 @@ class FullscreenActivity : FragmentActivity() {
         }
     }
 
-    fun randomEnemy(floor: Int) : Enemy{
+    fun randomEnemy(floor: Int): Enemy {
         return Enemy_Zombie(floor)
     }
 
-    fun randomBoss(floor: Int) : Enemy{
+    fun randomBoss(floor: Int): Enemy {
         return Boss_Dragon(floor)
+    }
+
+    fun randomShrine(): Move {
+        return when ((1..3).random()) {
+            //Negative Effect
+            1 -> {
+                when((1..5).random()) {
+                    in (1..2) -> { Move(-1,0) }
+                    in (3..4) -> { Move(0,-1) }
+                    else -> { Move(-1,-1) }
+                }
+            }
+            //Positive effect
+            else -> {
+                when ((1..5).random()) {
+                    in (1..2) -> { Move(1,0) }
+                    in (3..4) -> { Move(0,1) }
+                    else -> { Move(1,1) }
+                }
+            }
+        }
     }
 }
