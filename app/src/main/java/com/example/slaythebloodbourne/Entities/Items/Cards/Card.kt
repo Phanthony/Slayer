@@ -5,6 +5,7 @@ import com.example.slaythebloodbourne.Entities.Enemies.Enemy
 import com.example.slaythebloodbourne.Entities.Items.Item
 
 interface Card: Item {
+    var player: Character
     val attack: Int
     val block: Int
     val energyCost: Int

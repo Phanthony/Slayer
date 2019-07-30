@@ -9,10 +9,7 @@ import android.view.View.OnClickListener
 import android.view.View.TEXT_ALIGNMENT_CENTER
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.ProgressBar
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.Guideline
 import androidx.fragment.app.Fragment
@@ -196,11 +193,11 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
     }
 
     private fun updatePlayerAttack(){
-        playerBonusAttack.text = "${player.playerBonusAttack}"
+        playerBonusAttack.text = "${player.playerBonusAttack + player.tempAttack}"
     }
 
     private fun updatePlayerBlock(){
-        playerBonusBlock.text = "${player.playerBonusBlock}"
+        playerBonusBlock.text = "${player.playerBonusBlock + player.tempBlock + player.playerBlock}"
     }
 
     private fun leaveBattleFragment() {
@@ -234,20 +231,23 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
     }
 
     private fun animateEnemy(){
-        CoroutineScope(Dispatchers.Main).launch {
-            enemyRight.setGuidelinePercent(0.8F)
-            enemyTop.setGuidelinePercent(0.23F)
-            enemyLeft.setGuidelinePercent(0.39F)
-            enemyBottom.setGuidelinePercent(0.51F)
+        val enemyHasMove = enemyAction.childCount > 0
+        if(enemyHasMove) {
+            CoroutineScope(Dispatchers.Main).launch {
+                enemyRight.setGuidelinePercent(0.8F)
+                enemyTop.setGuidelinePercent(0.23F)
+                enemyLeft.setGuidelinePercent(0.39F)
+                enemyBottom.setGuidelinePercent(0.51F)
 
-            withContext(Dispatchers.IO) {
-                delay(150)
+                withContext(Dispatchers.IO) {
+                    delay(150)
+                }
+
+                enemyRight.setGuidelinePercent(0.9F)
+                enemyTop.setGuidelinePercent(0.13F)
+                enemyLeft.setGuidelinePercent(0.49F)
+                enemyBottom.setGuidelinePercent(0.41F)
             }
-
-            enemyRight.setGuidelinePercent(0.9F)
-            enemyTop.setGuidelinePercent(0.13F)
-            enemyLeft.setGuidelinePercent(0.49F)
-            enemyBottom.setGuidelinePercent(0.41F)
         }
     }
 
@@ -259,6 +259,7 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
         if (checkBattleState()) cardButtonBuilder(player.playerHand)
         updateEnemyHealth()
         updateEnemyMoves()
+        updatePlayerEnergyText()
     }
 
     private fun useCard(card: Card): Boolean {
@@ -302,6 +303,8 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
         updatePlayerHealth()
         updatePlayerEnergyText()
         updateEnemyHealth()
+        updatePlayerAttack()
+        updatePlayerBlock()
         if(damageDone!=0){
             val animation = AnimationUtils.loadAnimation(this.context,R.anim.text_slide_up)
             val damage = TextView(this.context).apply {
@@ -330,6 +333,8 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
                 return false
             }
             BATTLE_WON -> {
+                player.tempBlock = 0
+                player.tempAttack = 0
                 leaveBattleFragment()
                 return false
             }

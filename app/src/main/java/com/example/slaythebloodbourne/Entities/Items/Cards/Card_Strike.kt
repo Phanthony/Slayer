@@ -3,9 +3,9 @@ package com.example.slaythebloodbourne.Entities.Items.Cards
 import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy
 
-class Card_Strike(private val player: Character): Card {
+class Card_Strike(override var player: Character): Card {
     override val description: String
-        get() = updateDescription()
+        get() = "Deal ${attack+player.playerBonusAttack+player.tempAttack} damage"
     override val energyCost = 1
     override val attack = 5
     override val block = 0
@@ -13,9 +13,5 @@ class Card_Strike(private val player: Character): Card {
     override val special = false
 
     override fun ability(player: Character, enemy: Enemy) {
-    }
-
-    private fun updateDescription():String{
-        return "Deal ${attack+player.playerBonusAttack} damage"
     }
 }

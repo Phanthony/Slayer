@@ -6,11 +6,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Enemies.Bosses.Boss_Dragon
+import com.example.slaythebloodbourne.Entities.Enemies.Bosses.Boss_Red_Dragon
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy
+import com.example.slaythebloodbourne.Entities.Enemies.Enemy_Slime
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy_Zombie
 import com.example.slaythebloodbourne.Entities.Enemies.Move
 import com.example.slaythebloodbourne.Entities.Items.Cards.*
+import com.example.slaythebloodbourne.Modules.PathWayDAO
+import com.example.slaythebloodbourne.Modules.PathWayDatabase
+import com.example.slaythebloodbourne.Modules.PathWayEntity
 import com.example.slaythebloodbourne.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -18,6 +26,8 @@ import com.example.slaythebloodbourne.R
  */
 class FullscreenActivity : FragmentActivity() {
 
+    lateinit var pathwayDatabase: PathWayDatabase
+    lateinit var pathwayDao: PathWayDAO
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,15 +36,22 @@ class FullscreenActivity : FragmentActivity() {
         setContentView(R.layout.activity_fullscreen)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
+        pathwayDatabase = PathWayDatabase.getInstance(this)!!
+        pathwayDao = pathwayDatabase.pathwayDAO()
         if (savedInstanceState != null) {
             return
         }
 
-        val startMenu = MainMenuFragment()
+        val startMenu = MainMenuFragment(pathwayDao)
 
         supportFragmentManager.beginTransaction().add(R.id.fragmentContainer, startMenu).commit()
 
+    }
 
+    fun updateDatabase(rooms: ArrayList<Int>,character: Character,floor: Int){
+        CoroutineScope(Dispatchers.IO).launch {
+            pathwayDao.insert(PathWayEntity(1,rooms,character,floor,character.playerHand,character.playerDiscard,character.playerDeck))
+        }
     }
 
     fun replaceCurrentFragmentNoSave(fragment: Fragment) {
@@ -53,7 +70,10 @@ class FullscreenActivity : FragmentActivity() {
     }
 
     fun createNewGame() {
-        val startMenu = MainMenuFragment()
+        CoroutineScope(Dispatchers.IO).launch {
+            pathwayDao.resetGame()
+        }
+        val startMenu = MainMenuFragment(pathwayDao)
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, startMenu)
             .commit()
@@ -69,7 +89,7 @@ class FullscreenActivity : FragmentActivity() {
 
     fun randomCard(player: Character): Card? {
         return when ((1..3).random()) {
-            1 -> when ((1..8).random()) {
+            1 -> when ((1..10).random()) {
                 in (1..2) -> {
                     Card_Strike(player)
                 }
@@ -80,6 +100,8 @@ class FullscreenActivity : FragmentActivity() {
                 6 -> Card_AttackBreak(player)
                 7 -> Card_ShieldBreak(player)
                 8 -> Card_Bash(player)
+                9 -> Card_Charge(player)
+                10 -> Card_RaiseAttack(player)
                 else -> {
                     null
                 }
@@ -112,11 +134,17 @@ class FullscreenActivity : FragmentActivity() {
     }
 
     fun randomEnemy(floor: Int): Enemy {
-        return Enemy_Zombie(floor)
+        return when((0..1).random()) {
+            1 -> Enemy_Slime(floor)
+            else -> Enemy_Zombie(floor)
+        }
     }
 
     fun randomBoss(floor: Int): Enemy {
-        return Boss_Dragon(floor)
+        return when((0..1).random()){
+            1 -> Boss_Dragon(floor)
+            else -> Boss_Red_Dragon(floor)
+        }
     }
 
     fun randomShrine(): Move {

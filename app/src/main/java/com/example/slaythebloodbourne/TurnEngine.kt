@@ -16,8 +16,8 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
     fun startTurn() {
         val enemyMove = enemy.chooseMove()
         if (battleState == BATTLE_ONGOING) {
-            enemy.enemyBlock = enemyMove.block
-            enemy.enemyAttack = enemyMove.attack
+            enemy.enemyBlock = enemyMove.block + enemy.tempBlock
+            enemy.enemyAttack = enemyMove.attack + enemy.tempDamage
             playerDrawFromHand()
         }
         player.playerCurrentEnergy = player.energy
@@ -38,8 +38,8 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
         var enemyDamageDone = 0
         if (battleState == BATTLE_ONGOING) {
             enemyDamageDone =
-                if (enemy.enemyAttack + enemy.tempDamage - player.playerBlock - player.tempBlock - player.playerBonusBlock > 0)
-                    enemy.enemyAttack + enemy.tempDamage - player.playerBlock - player.tempBlock - player.playerBonusBlock else 0
+                if (enemy.enemyAttack - player.playerBlock - player.tempBlock - player.playerBonusBlock > 0)
+                    enemy.enemyAttack - player.playerBlock - player.tempBlock - player.playerBonusBlock else 0
             player.takeDamage(enemyDamageDone)
             if (player.playerCurrentHealth <= 0) {
                 battleState = BATTLE_LOST; return 0
@@ -81,14 +81,26 @@ class TurnEngine(val player: Character, private val enemy: Enemy) {
                     0 -> 0
                     else -> {
                         if (card.attack + player.playerBonusAttack + player.tempAttack
-                            - enemy.enemyBlock - enemy.tempBlock > 0
-                        ) card.attack + player.playerBonusAttack + player.tempAttack - enemy.enemyBlock - enemy.tempBlock else 0
+                            - enemy.enemyBlock > 0
+                        ) {
+                            val r = card.attack + player.playerBonusAttack + player.tempAttack - enemy.enemyBlock
+                            enemy.enemyBlock = 0
+                            r
+
+                        }
+                        else {
+                            enemy.enemyBlock -= (card.attack + player.playerBonusAttack + player.tempAttack)
+                            0
+                        }
                     }
                 }
+
             enemy.takeDamage(playerDamageDone)
             player.playerDiscard.add(card)
             val pos = player.playerHand.indexOf(card)
             player.playerHand.removeAt(pos)
+
+
             if (enemy.enemyCurrentHealth <= 0) {
                 battleState = BATTLE_WON
             }

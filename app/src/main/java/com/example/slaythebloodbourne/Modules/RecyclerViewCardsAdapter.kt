@@ -5,6 +5,7 @@ import android.view.View
 import android.view.View.*
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.slaythebloodbourne.Entities.Items.Cards.Card
@@ -14,6 +15,7 @@ import org.w3c.dom.Text
 
 
 class RecyclerViewCardsAdapter(val cardList: ArrayList<Card>, val listenerList: ArrayList<OnClickListener>) : RecyclerView.Adapter<RecyclerViewCardsAdapter.ViewHolder>(){
+
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val cardButton: Button = itemView.cardButton
@@ -46,6 +48,7 @@ class RecyclerViewCardsAdapter(val cardList: ArrayList<Card>, val listenerList: 
         listenerList.addAll(listener)
         notifyDataSetChanged()
     }
+
 
     fun deleteCard(int: Int){
         cardList.removeAt(int)

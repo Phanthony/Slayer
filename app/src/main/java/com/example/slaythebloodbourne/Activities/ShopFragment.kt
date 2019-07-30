@@ -105,7 +105,7 @@ class ShopFragment(private val player: Character) : Fragment() {
         //Select random cards
         for (i in (1..(0..3).random())) {
             val goldCost = (31..54).random()
-            val card = when ((1..8).random()) {
+            val card = when ((1..10).random()) {
                 in (1..2) -> {
                     Card_Strike(player)
                 }
@@ -120,6 +120,12 @@ class ShopFragment(private val player: Character) : Fragment() {
                 }
                 7 -> {
                     Card_ShieldBreak(player)
+                }
+                8 -> {
+                    Card_Charge(player)
+                }
+                9 -> {
+                    Card_RaiseAttack(player)
                 }
                 else -> Card_Bite(player)
             }

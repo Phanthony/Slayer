@@ -3,7 +3,7 @@ package com.example.slaythebloodbourne.Entities.Items.Cards
 import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy
 
-class Card_Bite(val player: Character): Card {
+class Card_Bite(override var player: Character): Card {
     override val energyCost = 1
     override val attack = 3
     override val block = 0
@@ -18,6 +18,6 @@ class Card_Bite(val player: Character): Card {
     }
 
     private fun updateDescription(): String{
-        return "Deal ${attack+player.playerBonusAttack} damage\nSteal 2 health"
+        return "Deal ${attack+player.playerBonusAttack+player.tempAttack} damage\nSteal 2 health"
     }
 }
