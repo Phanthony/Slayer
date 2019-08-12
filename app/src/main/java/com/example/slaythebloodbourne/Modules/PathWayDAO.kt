@@ -11,11 +11,35 @@ import com.example.slaythebloodbourne.Activities.PathwayFragment
 interface PathWayDAO{
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(pathway: PathWayEntity)
+    fun insertPathway(pathway: PathWayEntity)
 
     @Query("SELECT * FROM pathway_table")
     fun getPathway(): PathWayEntity?
 
     @Query("DELETE FROM pathway_table")
     fun resetGame()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertEnemy(enemy: EnemyTable)
+
+    @Query("SELECT * FROM enemy_table")
+    fun getEnemy(): EnemyTable
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertShop(store: StoreTable)
+
+    @Query("SELECT * FROM store_table")
+    fun getShop(): StoreTable
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertChest(chest: ChestTable)
+
+    @Query("SELECT * FROM chest_table")
+    fun getChest(): ChestTable
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertShrine(shrine: ShrineTable)
+
+    @Query("SELECT * FROM shrine_table")
+    fun getShrine(): ShrineTable
 }

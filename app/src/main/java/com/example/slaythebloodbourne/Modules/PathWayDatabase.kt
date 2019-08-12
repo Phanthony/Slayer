@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.example.slaythebloodbourne.Activities.PathwayFragment
 
-@Database(entities = [PathWayEntity::class], version = 1)
+@Database(entities = [PathWayEntity::class,EnemyTable::class,ShrineTable::class,StoreTable::class,ChestTable::class], version = 1)
 @TypeConverters(RoomListTypeConverter::class,CharacterTypeConverter::class)
 abstract class PathWayDatabase : RoomDatabase() {
 

@@ -4,6 +4,10 @@ import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy
 
 class Card_Bash(override var player: Character):Card {
+    override fun getDesc(): String {
+        return "Add $block block and Deal ${player.playerBonusAttack+attack+player.tempAttack} damage"
+    }
+
     override val attack = 3
     override val block  = 3
     override val energyCost = 1
@@ -14,7 +18,5 @@ class Card_Bash(override var player: Character):Card {
     }
 
     override val name = "Shield Bash"
-    override val description: String
-        get() = "Add $block block\nDeal ${player.playerBonusAttack+attack+player.tempAttack} damage"
-
+    override var description = getDesc()
 }

@@ -18,18 +18,68 @@ import com.example.slaythebloodbourne.Entities.Items.Item_Potion_50
 import com.example.slaythebloodbourne.Modules.RecyclerViewShopAdapter
 import com.example.slaythebloodbourne.R
 
+class ShopFragment(
+    private val player: Character,
+    var itemList: ArrayList<Item>? = null,
+    var goldList: ArrayList<Int>? = null
+) : Fragment() {
 
-class ShopFragment(private val player: Character) : Fragment() {
-
-    private val adapter = RecyclerViewShopAdapter(arrayListOf(), arrayListOf(), arrayListOf())
+    val adapter = RecyclerViewShopAdapter(arrayListOf(), arrayListOf(), arrayListOf())
 
     lateinit var playerGoldText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        if (savedInstanceState == null) {
-            randomizePotions()
-            randomizeCards()
+        val shopTempList: ArrayList<Item>
+        val goldTempList: ArrayList<Int>
+        if (itemList == null) {
+            shopTempList = arrayListOf()
+            goldTempList = arrayListOf()
+            randomizePotions(shopTempList, goldTempList)
+            randomizeCards(shopTempList, goldTempList)
+        } else {
+            shopTempList = itemList!!
+            goldTempList = goldList!!
         }
+        val tempListenerList = arrayListOf<OnClickListener>()
+        for (i in 0 until shopTempList.size) {
+            val listener = when (i.javaClass) {
+                Item_Potion_100::class.java -> {
+                    OnClickListener {
+                        if (checkGold(goldTempList[i])) {
+                            player.getHealth(player.health)
+                            val index = adapter.itemList.indexOf(shopTempList[i])
+                            adapter.deleteItem(index)
+                        }
+                    }
+                }
+                Item_Potion_50::class.java -> {
+                    OnClickListener {
+                        if (checkGold(goldTempList[i])) {
+                            player.getHealth(player.health / 2)
+                            val index = adapter.itemList.indexOf(shopTempList[i])
+                            adapter.deleteItem(index)
+                        }
+                    }
+                }
+                Card::class.java -> {
+                    OnClickListener {
+                        if (checkGold(goldTempList[i])) {
+                            val card = shopTempList[i] as Card
+                            player.playerDeck.add(card)
+                            player.playerDeck.shuffle()
+                            val index = adapter.itemList.indexOf(card)
+                            adapter.deleteItem(index)
+                        }
+                    }
+                }
+                else -> {
+                    OnClickListener {
+                    }
+                }
+            }
+            tempListenerList.add(listener)
+        }
+        adapter.addItems(shopTempList, tempListenerList, goldTempList)
         super.onCreate(savedInstanceState)
     }
 
@@ -46,17 +96,13 @@ class ShopFragment(private val player: Character) : Fragment() {
         itemList.adapter = adapter
 
         view.findViewById<Button>(R.id.shopExitButton).setOnClickListener {
-            main.backToPathway()
+            main.backToPathway(player)
         }
-
         return view
     }
 
-    private fun randomizePotions() {
 
-        val onClickList = arrayListOf<OnClickListener>()
-        val itemList = arrayListOf<Item>()
-        val goldList = arrayListOf<Int>()
+    private fun randomizePotions(itemList: ArrayList<Item>, goldList: ArrayList<Int>) {
 
         //pick random number of potions
         for (i in (1..((1..2).random()))) {
@@ -66,42 +112,21 @@ class ShopFragment(private val player: Character) : Fragment() {
                 1 -> {
                     val goldCost = (85..128).random()
                     val potion = Item_Potion_100()
-                    val listener = OnClickListener {
-                        if (checkGold(goldCost)) {
-                            player.getHealth(player.health)
-                            val index = adapter.itemList.indexOf(potion)
-                            adapter.deleteItem(index)
-                        }
-                    }
                     goldList.add(goldCost)
                     itemList.add(potion)
-                    onClickList.add(listener)
                 }
                 else -> {
                     val goldCost = (51..72).random()
                     val potion = Item_Potion_50()
-                    val listener = OnClickListener {
-                        if (checkGold(goldCost)) {
-                            player.getHealth(player.health / 2)
-                            val index = adapter.itemList.indexOf(potion)
-                            adapter.deleteItem(index)
-                        }
-                    }
                     goldList.add(goldCost)
                     itemList.add(potion)
-                    onClickList.add(listener)
                 }
             }
         }
-        adapter.addItems(itemList, onClickList, goldList)
     }
 
 
-    private fun randomizeCards() {
-        val onClickList = arrayListOf<OnClickListener>()
-        val itemList = arrayListOf<Item>()
-        val goldList = arrayListOf<Int>()
-
+    private fun randomizeCards(itemList: ArrayList<Item>, goldList: ArrayList<Int>) {
         //Select random cards
         for (i in (1..(0..3).random())) {
             val goldCost = (31..54).random()
@@ -129,19 +154,9 @@ class ShopFragment(private val player: Character) : Fragment() {
                 }
                 else -> Card_Bite(player)
             }
-            val listener = OnClickListener {
-                if (checkGold(goldCost)) {
-                    player.playerDeck.add(card)
-                    player.playerDeck.shuffle()
-                    val index = adapter.itemList.indexOf(card)
-                    adapter.deleteItem(index)
-                }
-            }
             goldList.add(goldCost)
             itemList.add(card)
-            onClickList.add(listener)
         }
-        adapter.addItems(itemList, onClickList, goldList)
     }
 
     private fun updateGoldText() {

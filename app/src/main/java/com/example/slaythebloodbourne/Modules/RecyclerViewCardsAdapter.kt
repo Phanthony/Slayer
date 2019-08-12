@@ -38,7 +38,7 @@ class RecyclerViewCardsAdapter(val cardList: ArrayList<Card>, val listenerList: 
         val currentListener = listenerList[position]
         val currentCard = cardList[position]
         holder.cardTitle.text = currentCard.name
-        holder.cardDesc.text = currentCard.description
+        holder.cardDesc.text = currentCard.getDesc()
         holder.cardButton.setOnClickListener(currentListener)
         holder.cardEnergy.text = "${currentCard.energyCost}"
     }

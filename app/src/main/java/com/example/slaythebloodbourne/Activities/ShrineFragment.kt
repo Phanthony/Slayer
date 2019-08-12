@@ -1,5 +1,6 @@
 package com.example.slaythebloodbourne.Activities
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -39,12 +40,13 @@ class ShrineFragment(val player: Character, val effect: Move) : Fragment() {
         shrineRewardLayout = shrineNewLayout.findViewById(R.id.shrine_reward_layout)
         shrineTextLayout = shrineNewLayout.findViewById(R.id.shrine_text_layout)
         leaveShrineButton = shrineNewLayout.findViewById(R.id.shrine_leave_button)
+        leaveShrineButton.setTextColor(Color.parseColor("#FFFFFF"))
 
         leaveShrineButton.setOnClickListener {
             player.playerBonusAttack += effect.attack
             player.playerBonusBlock += effect.block
             val main = (activity as FullscreenActivity)
-            main.backToPathway()
+            main.backToPathway(player)
         }
 
         setRewards()

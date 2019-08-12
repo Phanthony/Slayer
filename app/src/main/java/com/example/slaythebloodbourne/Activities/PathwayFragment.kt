@@ -10,14 +10,12 @@ import androidx.fragment.app.Fragment
 import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Items.Cards.Card
 import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Block
+import com.example.slaythebloodbourne.Entities.Items.Cards.Card_RaiseAttack
 import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Strike
 import com.example.slaythebloodbourne.R
 
 class PathwayFragment(roomSelection: ArrayList<Int>? = null,
-                      character: Character? = null, level: Int? = null,
-                      playerDiscard: ArrayList<Card>? = null,
-                      playerHand: ArrayList<Card>? = null,
-                      playerDeck: ArrayList<Card>? = null) : Fragment() {
+                      character: Character? = null, level: Int? = null): Fragment() {
 
     private lateinit var pathwayList: ArrayList<AppCompatImageButton>
     private lateinit var currentFloorTextView: TextView
@@ -33,20 +31,14 @@ class PathwayFragment(roomSelection: ArrayList<Int>? = null,
             char
         }
         else -> {
-            val char = character.apply {
-                this.playerDiscard = playerDiscard!!
-                this.playerDeck = playerDeck!!
-                this.playerHand = playerHand!!
-            }
-            char
-
+            character
         }
     }
 
-    fun addCardsToDeck(player: Character){
+    private fun addCardsToDeck(player: Character){
         for(i in 1..5){
             val baseStrike = Card_Strike(player)
-            val baseBlock = Card_Block(player)
+            val baseBlock = Card_RaiseAttack(player)
             player.playerDeck.add(baseBlock)
             player.playerDeck.add(baseStrike)
         }
@@ -102,9 +94,12 @@ class PathwayFragment(roomSelection: ArrayList<Int>? = null,
                 0 -> {
                     currentRoom.setImageResource(R.drawable.enemy_sign)
                     currentRoom.setOnClickListener {
-                        val newBattle = BattleFragment(player, levelCount, main.randomEnemy(levelCount))
+                        val enemy = main.randomEnemy(levelCount)
+                        val newBattle = BattleFragment(player, levelCount, enemy)
                         levelCount++
                         rooms = selectRooms()
+                        main.updateEnemyTable(enemy)
+                        main.updateDatabase(rooms,player,levelCount,0)
                         main.replaceCurrentFragmentNoSave(newBattle)
                     }
                 }
@@ -114,6 +109,8 @@ class PathwayFragment(roomSelection: ArrayList<Int>? = null,
                         val store = ShopFragment(player)
                         levelCount++
                         rooms = selectRooms()
+                        main.updateStoreTable(store.adapter.itemList,store.adapter.goldList)
+                        main.updateDatabase(rooms,player,levelCount,1)
                         main.replaceCurrentFragmentNoSave(store)
                     }
 
@@ -126,15 +123,20 @@ class PathwayFragment(roomSelection: ArrayList<Int>? = null,
                         val chestReward = VictoryFragment(rewardCard, rewardGold, player, true)
                         levelCount++
                         rooms = selectRooms()
+                        main.updateChestTable(rewardGold,rewardCard)
+                        main.updateDatabase(rooms,player,levelCount,2)
                         main.replaceCurrentFragmentNoSave(chestReward)
                     }
                 }
                 3 -> {
                     currentRoom.setImageResource(R.drawable.boss_sign)
                     currentRoom.setOnClickListener {
-                        val newBattle = BattleFragment(player, levelCount, main.randomBoss(levelCount))
+                        val boss = main.randomBoss(levelCount)
+                        val newBattle = BattleFragment(player, levelCount, boss)
                         levelCount++
                         rooms = selectRooms()
+                        main.updateEnemyTable(boss)
+                        main.updateDatabase(rooms,player,levelCount,0)
                         main.replaceCurrentFragmentNoSave(newBattle)
                     }
                 }
@@ -145,6 +147,8 @@ class PathwayFragment(roomSelection: ArrayList<Int>? = null,
                         val shrine = ShrineFragment(player, shrineReward)
                         levelCount++
                         rooms = selectRooms()
+                        main.updateShrineTable(shrineReward)
+                        main.updateDatabase(rooms,player,levelCount,3)
                         main.replaceCurrentFragmentNoSave(shrine)
                     }
                 }
@@ -155,7 +159,7 @@ class PathwayFragment(roomSelection: ArrayList<Int>? = null,
                         currentFloorTextView.text = "Floor $levelCount"
                         rooms = selectRooms()
                         setButtonListener(rooms)
-                        main.updateDatabase(rooms,player,levelCount)
+                        main.updateDatabase(rooms,player,levelCount,4)
                     }
                 }
             }
@@ -166,7 +170,7 @@ class PathwayFragment(roomSelection: ArrayList<Int>? = null,
 
         val main = activity as FullscreenActivity
 
-        main.updateDatabase(rooms,player,levelCount)
+        main.updateDatabase(rooms,player,levelCount,4)
 
         val view = inflater.inflate(R.layout.pathway_fragment_layout, container, false)
 

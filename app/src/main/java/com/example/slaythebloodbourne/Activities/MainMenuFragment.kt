@@ -37,14 +37,46 @@ class MainMenuFragment(val pathwayDao: PathWayDAO):Fragment() {
             game = if(previousPathway == null){
                 PathwayFragment()
             } else{
-                PathwayFragment(previousPathway.roomSelections,
-                    previousPathway.player,
-                    previousPathway.floorCount,
-                    previousPathway.playerDiscard,
-                    previousPathway.playerHand,
-                    previousPathway.playerDeck)
+                val playerWithCards = previousPathway.player.apply {
+                    this.playerDiscard = previousPathway.playerDiscard
+                    this.playerDeck = previousPathway.playerDeck
+                    this.playerHand = previousPathway.playerHand
+                }
+                playerWithCards.playerDiscard.forEach { it.player = playerWithCards }
+                playerWithCards.playerHand.forEach { it.player = playerWithCards }
+                playerWithCards.playerDeck.forEach { it.player = playerWithCards }
+                when(previousPathway.currentPosition) {
+                    0 -> {
+                        val enemyTable = pathwayDao.getEnemy()
+                        BattleFragment(playerWithCards,previousPathway.floorCount,enemyTable.enemy,true)
+                    }
+                    1 -> {
+                        val shopTable = pathwayDao.getShop()
+                        ShopFragment(playerWithCards,shopTable.itemList,shopTable.goldList)
+                    }
+                    2 -> {
+                        val chestTable = pathwayDao.getChest()
+                        VictoryFragment(chestTable.cardReward,chestTable.goldReward,playerWithCards,true)
+                    }
+                    3 -> {
+                        val shrineTable = pathwayDao.getShrine()
+                        ShrineFragment(playerWithCards,shrineTable.reward)
+                    }
+                    else -> {
+                        PathwayFragment(
+                            previousPathway.roomSelections,
+                            previousPathway.player,
+                            previousPathway.floorCount
+                        )
+                    }
+                }
             }
-            mainActivity.replaceCurrentFragmentSave(game)
+            if(pathwayDao.getPathway()?.currentPosition == 1 || pathwayDao.getPathway() == null) {
+                mainActivity.replaceCurrentFragmentSave(game)
+            }
+            else{
+                mainActivity.replaceCurrentFragmentNoSave(game)
+            }
         }
     }
 }

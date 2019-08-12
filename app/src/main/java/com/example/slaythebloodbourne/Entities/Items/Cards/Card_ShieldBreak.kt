@@ -4,6 +4,10 @@ import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy
 
 class Card_ShieldBreak(override var player: Character):Card {
+    override fun getDesc(): String {
+        return "Enemy loses 3 block"
+    }
+
     override val attack = 0
     override val block  = 0
     override val energyCost = 1
@@ -14,6 +18,5 @@ class Card_ShieldBreak(override var player: Character):Card {
     }
 
     override val name = "Shield Break"
-    override val description: String
-        get() = "Enemy loses 3 block"
+    override var description = getDesc()
 }

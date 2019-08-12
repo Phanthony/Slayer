@@ -4,6 +4,10 @@ import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy
 
 class Card_Charge(override var player: Character): Card {
+    override fun getDesc(): String {
+        return "Deal ${player.playerBonusAttack + attack+player.tempAttack} damage\nLose 2 block"
+    }
+
     override val attack = 12
     override val block = 0
     override val energyCost = 1
@@ -14,7 +18,6 @@ class Card_Charge(override var player: Character): Card {
     }
 
     override val name = "Charge"
-    override val description: String
-        get() = "Deal ${player.playerBonusAttack + attack+player.tempAttack} damage\nTake 2 extra damage"
+    override var description = getDesc()
 
 }

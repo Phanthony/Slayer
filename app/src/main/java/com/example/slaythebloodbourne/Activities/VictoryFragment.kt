@@ -67,7 +67,7 @@ class VictoryFragment(private val card: Card?, private val gold:Int, private val
         view.findViewById<Button>(R.id.finishButton).setOnClickListener{
             player.currentGold += gold
             val main = (activity as FullscreenActivity)
-            main.backToPathway()
+            main.backToPathway(player)
         }
 
         if(chest){

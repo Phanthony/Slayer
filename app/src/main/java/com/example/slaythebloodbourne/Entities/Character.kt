@@ -22,10 +22,9 @@ class Character {
     var playerBonusAttack = 1
     var playerBonusBlock = 1
 
-    //Debuff/buff stats
+    //Debuff/Buff stats
     var tempAttack = 0
     var tempBlock = 0
-
 
     fun getHealth(int: Int){
         playerCurrentHealth += int
@@ -36,4 +35,5 @@ class Character {
         playerCurrentHealth -= damageDone
         if(playerCurrentHealth<0) playerCurrentHealth = 0
     }
+
 }

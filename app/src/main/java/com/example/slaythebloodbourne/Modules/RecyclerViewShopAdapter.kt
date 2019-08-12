@@ -11,7 +11,7 @@ import com.example.slaythebloodbourne.Entities.Items.Item
 import com.example.slaythebloodbourne.R
 import kotlinx.android.synthetic.main.recyclerview_shop_layout.view.*
 
-class RecyclerViewShopAdapter(val itemList: ArrayList<Item>,private val listenerList: ArrayList<View.OnClickListener>,private val goldList: ArrayList<Int>) : RecyclerView.Adapter<RecyclerViewShopAdapter.ViewHolder>(){
+class RecyclerViewShopAdapter(val itemList: ArrayList<Item>,private val listenerList: ArrayList<View.OnClickListener>, val goldList: ArrayList<Int>) : RecyclerView.Adapter<RecyclerViewShopAdapter.ViewHolder>(){
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val itemButton: Button = itemView.shopItem!!
