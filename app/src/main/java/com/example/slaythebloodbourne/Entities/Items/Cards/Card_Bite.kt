@@ -12,7 +12,7 @@ class Card_Bite(override var player: Character): Card {
     override val attack = 3
     override val block = 0
     override val name = "Bite"
-    @Transient override var description = getDesc()
+    override var description = getDesc()
     override val special = true
 
     override fun ability(player: Character, enemy: Enemy) {

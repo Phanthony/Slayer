@@ -20,6 +20,7 @@ class CharacterTypeConverter {
         val gsonBuilder = GsonBuilder()
         gsonBuilder.registerTypeAdapter(Card::class.java, CardInterfaceAdapter())
         gsonBuilder.registerTypeAdapter(Enemy::class.java,EnemyInterfaceAdapter())
+        gsonBuilder.registerTypeAdapter(Item::class.java, ItemInterfaceAdapter())
         gson = gsonBuilder.create()
     }
 

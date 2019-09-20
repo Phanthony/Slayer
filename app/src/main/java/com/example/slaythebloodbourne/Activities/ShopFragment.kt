@@ -29,9 +29,10 @@ class ShopFragment(
     lateinit var playerGoldText: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        val main = activity as FullscreenActivity
         val shopTempList: ArrayList<Item>
         val goldTempList: ArrayList<Int>
-        if (itemList == null) {
+        if (itemList == null || itemList!!.isEmpty()) {
             shopTempList = arrayListOf()
             goldTempList = arrayListOf()
             randomizePotions(shopTempList, goldTempList)
@@ -40,9 +41,11 @@ class ShopFragment(
             shopTempList = itemList!!
             goldTempList = goldList!!
         }
+        main.updateStoreTable(adapter.itemList,adapter.goldList)
         val tempListenerList = arrayListOf<OnClickListener>()
         for (i in 0 until shopTempList.size) {
-            val listener = when (i.javaClass) {
+            println(shopTempList[i].javaClass)
+            val listener = when (shopTempList[i].javaClass) {
                 Item_Potion_100::class.java -> {
                     OnClickListener {
                         if (checkGold(goldTempList[i])) {
@@ -61,7 +64,7 @@ class ShopFragment(
                         }
                     }
                 }
-                Card::class.java -> {
+                else -> {
                     OnClickListener {
                         if (checkGold(goldTempList[i])) {
                             val card = shopTempList[i] as Card
@@ -70,10 +73,6 @@ class ShopFragment(
                             val index = adapter.itemList.indexOf(card)
                             adapter.deleteItem(index)
                         }
-                    }
-                }
-                else -> {
-                    OnClickListener {
                     }
                 }
             }
@@ -103,10 +102,8 @@ class ShopFragment(
 
 
     private fun randomizePotions(itemList: ArrayList<Item>, goldList: ArrayList<Int>) {
-
         //pick random number of potions
         for (i in (1..((1..2).random()))) {
-
             //select random type of potion
             when ((1..4).random()) {
                 1 -> {

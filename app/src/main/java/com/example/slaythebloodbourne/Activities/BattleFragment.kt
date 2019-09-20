@@ -15,16 +15,14 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.Guideline
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.slaythebloodbourne.Modules.BATTLE_LOST
-import com.example.slaythebloodbourne.Modules.BATTLE_WON
 import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Enemies.Enemy
 import com.example.slaythebloodbourne.Entities.Items.Cards.Card
-import com.example.slaythebloodbourne.Modules.RecyclerViewCardsAdapter
+import com.example.slaythebloodbourne.Modules.*
 import com.example.slaythebloodbourne.R
-import com.example.slaythebloodbourne.Modules.TurnEngine
 import kotlinx.coroutines.*
 
 class BattleFragment(private val player: Character, val floor: Int, val enemy: Enemy, val continuation: Boolean = false) : Fragment() {
@@ -44,7 +42,7 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
 
     lateinit var enemyAction: LinearLayout
 
-    private val adapter = RecyclerViewCardsAdapter(arrayListOf(), arrayListOf())
+    private val displayAdapter = RecyclerViewCardsAdapter(arrayListOf(), arrayListOf())
 
     var goldDropped: Int = 0
 
@@ -131,7 +129,7 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
 
         val cardList = view.findViewById<RecyclerView>(R.id.cardRecycleView)
         cardList.layoutManager = LinearLayoutManager(this.context, RecyclerView.HORIZONTAL, false)
-        cardList.adapter = adapter
+        cardList.adapter = displayAdapter
 
         if(enemy.enemyCurrentHealth <= 0){
             turnEngine.battleState = BATTLE_WON
@@ -155,26 +153,62 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
 
         mainLayout = view.findViewById(R.id.mainOuterBattleLayout)
 
+        val battleAdapter = RecyclerViewDiscardDeckAdapter(arrayListOf())
+        val discardDeckCards = view.findViewById<RecyclerView>(R.id.battle_discard_deck_recycler_view)
+        discardDeckCards.apply {
+            layoutManager = GridLayoutManager(this.context,3)
+            this.adapter = battleAdapter
+        }
+
+        val cardView = view.findViewById<LinearLayout>(R.id.battle_discard_deck_card_view)
+
+        val discardButton = view.findViewById<Button>(R.id.battle_discard_button)
+        discardButton.setOnClickListener {
+            val cards = player.playerDiscard
+            cards.sortBy {
+                it.name
+            }
+            battleAdapter.addCards(cards)
+            cardView.visibility = View.VISIBLE
+        }
+
+        val deckButton = view.findViewById<Button>(R.id.battle_deck_button)
+        deckButton.setOnClickListener {
+            val cards = player.playerDeck
+            cards.sortBy {
+                it.name
+            }
+            battleAdapter.addCards(cards)
+            cardView.visibility = View.VISIBLE
+        }
+
+        val cardViewExit = view.findViewById<Button>(R.id.battle_discard_deck_exit_button)
+        cardViewExit.setOnClickListener {
+            battleAdapter.clearCards()
+            cardView.visibility = View.INVISIBLE
+
+        }
+
         return view
 
     }
 
     private fun cardButtonBuilder(arrayList: ArrayList<Card>) {
         val main = activity as FullscreenActivity
-        adapter.clearCards()
+        displayAdapter.clearCards()
         val listenerList = arrayListOf<OnClickListener>()
         for (card in arrayList) {
             val clickListener = OnClickListener {
                 if (useCard(card)) {
-                    val adapterIndex = adapter.cardList.indexOf(card)
-                    adapter.deleteCard(adapterIndex)
+                    val adapterIndex = displayAdapter.cardList.indexOf(card)
+                    displayAdapter.deleteCard(adapterIndex)
                     main.updateEnemyTable(enemy)
                     main.updatePlayerInDatabase(player)
                 }
             }
             listenerList.add(clickListener)
         }
-        adapter.addCards(arrayList, listenerList)
+        displayAdapter.addCards(arrayList, listenerList)
     }
 
     //UI Functions
@@ -230,6 +264,8 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
         val main = (activity as FullscreenActivity)
         val rewardCard: Card? = main.randomCard(player)
         val victoryFragment = VictoryFragment(rewardCard, goldDropped, player)
+        main.updateCurrentPositionInDatabase(4)
+        main.updateChestTable(goldDropped,rewardCard)
         main.replaceCurrentFragmentNoSave(victoryFragment)
     }
 
@@ -319,7 +355,6 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
                 enemyDameDoneLayout.removeView(damage)
             }
 
-
             updateEnemyMoves(false)
             updateEnemyHealth()
             updatePlayerHealth()
@@ -368,7 +403,12 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
     private fun checkBattleState(): Boolean {
         when (turnEngine.battleState) {
             BATTLE_LOST -> {
-                showDefeatLayout()
+                if(continuation){
+                    leaveGame()
+                }
+                else {
+                    showDefeatLayout()
+                }
                 return false
             }
             BATTLE_WON -> {

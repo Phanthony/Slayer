@@ -47,6 +47,14 @@ class FullscreenActivity : FragmentActivity() {
 
     }
 
+    fun updateCurrentPositionInDatabase(position: Int){
+        CoroutineScope(Dispatchers.IO).launch {
+            val updatedPathwayEntity = pathwayDao.getPathway()!!
+            updatedPathwayEntity.currentPosition = position
+            pathwayDao.insertPathway(updatedPathwayEntity)
+        }
+    }
+
     fun updatePlayerInDatabase(player: Character) {
         CoroutineScope(Dispatchers.IO).launch {
             val updatedPathWayEntity = pathwayDao.getPathway()!!

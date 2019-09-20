@@ -131,4 +131,81 @@
 
     />
 
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/pathwayDiscardDeckGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5"
+    />
+
+    <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/pathwayDiscardDeckGuidelineBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.7"
+    />
+
+    <Button
+            android:id="@+id/pathwayDiscardButton"
+            android:layout_width="wrap_content"
+            android:layout_height="75dp"
+            app:layout_constraintLeft_toLeftOf="@id/pathWayLayout"
+            app:layout_constraintRight_toLeftOf="@id/pathwayDiscardDeckGuideline"
+            app:layout_constraintTop_toBottomOf="@+id/pathwayDiscardDeckGuidelineBottom"
+            android:background="@drawable/button_border"
+            android:text="discard"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+    />
+
+    <Button
+            android:id="@+id/pathwayDeckButton"
+            android:layout_width="wrap_content"
+            android:layout_height="75dp"
+            app:layout_constraintLeft_toRightOf="@id/pathwayDiscardDeckGuideline"
+            app:layout_constraintRight_toRightOf="@id/pathWayLayout"
+            app:layout_constraintTop_toBottomOf="@+id/pathwayDiscardDeckGuidelineBottom"
+            android:background="@drawable/button_border"
+            android:text="deck"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+    />
+
+    <LinearLayout
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/discard_deck_card_view"
+            android:orientation="vertical"
+            android:layout_margin="15dp"
+            android:background="@drawable/discard_deck_view"
+            android:visibility="invisible"
+            android:elevation="10dp"
+    >
+
+        <androidx.recyclerview.widget.RecyclerView
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/discard_deck_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+        <Button
+                android:layout_gravity="center"
+                android:id="@+id/discard_deck_exit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="EXIT"
+                android:textColor="@android:color/white"
+                android:background="@drawable/button_border"
+        />
+
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

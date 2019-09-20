@@ -62,6 +62,10 @@ class MainMenuFragment(val pathwayDao: PathWayDAO):Fragment() {
                         val shrineTable = pathwayDao.getShrine()
                         ShrineFragment(playerWithCards,shrineTable.reward)
                     }
+                    4 -> {
+                        val rewardTable = pathwayDao.getChest()
+                        VictoryFragment(rewardTable.cardReward,rewardTable.goldReward,playerWithCards)
+                    }
                     else -> {
                         PathwayFragment(
                             previousPathway.roomSelections,

@@ -26,7 +26,8 @@ data class PathWayEntity(
 // store -- 1
 // chest -- 2
 // shrine -- 3
-// pathway -- 4
+// reward -- 4
+// pathway -- 5
 
 @Entity(tableName = "enemy_table")
 data class EnemyTable(

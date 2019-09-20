@@ -4,14 +4,19 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.slaythebloodbourne.Entities.Character
 import com.example.slaythebloodbourne.Entities.Items.Cards.Card
 import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Block
 import com.example.slaythebloodbourne.Entities.Items.Cards.Card_RaiseAttack
 import com.example.slaythebloodbourne.Entities.Items.Cards.Card_Strike
+import com.example.slaythebloodbourne.Modules.RecyclerViewDiscardDeckAdapter
 import com.example.slaythebloodbourne.R
 
 class PathwayFragment(roomSelection: ArrayList<Int>? = null,
@@ -109,7 +114,6 @@ class PathwayFragment(roomSelection: ArrayList<Int>? = null,
                         val store = ShopFragment(player)
                         levelCount++
                         rooms = selectRooms()
-                        main.updateStoreTable(store.adapter.itemList,store.adapter.goldList)
                         main.updateDatabase(rooms,player,levelCount,1)
                         main.replaceCurrentFragmentNoSave(store)
                     }
@@ -159,7 +163,7 @@ class PathwayFragment(roomSelection: ArrayList<Int>? = null,
                         currentFloorTextView.text = "Floor $levelCount"
                         rooms = selectRooms()
                         setButtonListener(rooms)
-                        main.updateDatabase(rooms,player,levelCount,4)
+                        main.updateDatabase(rooms,player,levelCount,5)
                     }
                 }
             }
@@ -170,7 +174,7 @@ class PathwayFragment(roomSelection: ArrayList<Int>? = null,
 
         val main = activity as FullscreenActivity
 
-        main.updateDatabase(rooms,player,levelCount,4)
+        main.updateDatabase(rooms,player,levelCount,5)
 
         val view = inflater.inflate(R.layout.pathway_fragment_layout, container, false)
 
@@ -181,6 +185,42 @@ class PathwayFragment(roomSelection: ArrayList<Int>? = null,
         currentFloorTextView = view.findViewById(R.id.textFloorCount)
         pathwayList = arrayListOf(buttonPath1, buttonPath2, buttonPath3)
         currentFloorTextView.text = "Floor $levelCount"
+
+        val adapter = RecyclerViewDiscardDeckAdapter(arrayListOf())
+        val discardDeckCards = view.findViewById<RecyclerView>(R.id.discard_deck_recycler_view)
+        discardDeckCards.apply {
+            layoutManager = GridLayoutManager(this.context,3)
+            this.adapter = adapter
+        }
+
+        val cardView = view.findViewById<LinearLayout>(R.id.discard_deck_card_view)
+
+        val discardButton = view.findViewById<Button>(R.id.pathwayDiscardButton)
+        discardButton.setOnClickListener {
+            val cards = player.playerDiscard
+            cards.sortBy {
+                it.name
+            }
+            adapter.addCards(cards)
+            cardView.visibility = View.VISIBLE
+        }
+        
+        val deckButton = view.findViewById<Button>(R.id.pathwayDeckButton)
+        deckButton.setOnClickListener {
+            val cards = player.playerDeck
+            cards.sortBy {
+                it.name
+            }
+            adapter.addCards(cards)
+            cardView.visibility = View.VISIBLE
+        }
+
+        val cardViewExit = view.findViewById<Button>(R.id.discard_deck_exit_button)
+        cardViewExit.setOnClickListener {
+            adapter.clearCards()
+            cardView.visibility = View.INVISIBLE
+
+        }
 
         setButtonListener(rooms)
 
