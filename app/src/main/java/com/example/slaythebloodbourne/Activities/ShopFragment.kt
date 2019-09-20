@@ -68,8 +68,7 @@ class ShopFragment(
                     OnClickListener {
                         if (checkGold(goldTempList[i])) {
                             val card = shopTempList[i] as Card
-                            player.playerDeck.add(card)
-                            player.playerDeck.shuffle()
+                            player.playerDiscard.add(card)
                             val index = adapter.itemList.indexOf(card)
                             adapter.deleteItem(index)
                         }

@@ -39,8 +39,7 @@ class VictoryFragment(private val card: Card?, private val gold:Int, private val
             rewardCard!!.background = ContextCompat.getDrawable(this.context!!,R.drawable.button_border)
             rewardCard!!.setTextColor(Color.parseColor("#FFFFFF"))
             rewardCard!!.setOnClickListener {
-                player.playerDeck.add(card)
-                player.playerDeck.shuffle()
+                player.playerDiscard.add(card)
                 rewardCard!!.visibility = View.INVISIBLE
                 energyCost!!.text = ""
             }
