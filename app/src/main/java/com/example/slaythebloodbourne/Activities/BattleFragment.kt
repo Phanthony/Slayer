@@ -25,7 +25,7 @@ import com.example.slaythebloodbourne.Modules.*
 import com.example.slaythebloodbourne.R
 import kotlinx.coroutines.*
 
-class BattleFragment(private val player: Character, val floor: Int, val enemy: Enemy, val continuation: Boolean = false) : Fragment() {
+class BattleFragment(private val player: Character, val floor: Int, val enemy: Enemy, private val continuation: Boolean = false) : Fragment() {
 
     lateinit var enemyHealthBar: ProgressBar
     lateinit var enemyHealthText: TextView
@@ -325,6 +325,7 @@ class BattleFragment(private val player: Character, val floor: Int, val enemy: E
         updatePlayerEnergyText()
         updatePlayerBlock()
         updatePlayerAttack()
+        main.updateEnemyTable(enemy)
         main.updatePlayerInDatabase(player)
     }
 

@@ -15,7 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.nio.file.Path
 
-class MainMenuFragment(val pathwayDao: PathWayDAO):Fragment() {
+class MainMenuFragment(private val pathwayDao: PathWayDAO):Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -29,7 +29,7 @@ class MainMenuFragment(val pathwayDao: PathWayDAO):Fragment() {
         return view
     }
 
-    fun checkSave(){
+    private fun checkSave(){
         val mainActivity = activity as FullscreenActivity
         CoroutineScope(Dispatchers.IO).launch {
             val game: Fragment
